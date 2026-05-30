@@ -15,18 +15,14 @@ SanPham :: SanPham()
     soluong = 0;
     NSX = " ";
 }
-SanPham :: ~SanPham()
-{
-
-}
+SanPham :: ~SanPham(){}
 string SanPham :: getMaSP() const {return maSP;}
 int SanPham :: getGiaBan() const {return GiaBan;}
 string SanPham :: getNSX() const {return NSX;}
-void SanPham :: setMaSP(string maSP) {maSP  = maSP;}
+void SanPham :: setMaSP(string ma) { this->maSP = ma;}
 void SanPham :: Nhap()
 {
     cout << "Nhap ten san pham: ";
-    cin.ignore();
     getline(cin,ten);
 
     cout << "Nhap nha san xuat: ";
@@ -34,6 +30,11 @@ void SanPham :: Nhap()
 
     cout << "Nhap gia ban: ";
     cin >> GiaBan;
+
+    while (GiaBan <= 0){
+        cout << "Gia ban khong hop le!Xin vui long nhap lai:";
+        cin >> GiaBan;
+    }
 
     cout << "Nhap so luong con trong kho : ";
     cin >> soluong;
@@ -52,44 +53,8 @@ void SanPham::Xuat()const
          <<"\nGia: "<<GiaBan
          <<"\nSo luong con lai trong kho: "<<soluong;
 }
-DoDienTu :: DoDienTu() : SanPham()//chon DoDienTu() tu lop con DoDienTu ben trong SanPham()
-{
-    NSX = " ";
-}
-DoDienTu :: ~DoDienTu()
-{
-
-}
-void DoDienTu :: Nhap()
-{
-    SanPham :: Nhap();//tinh thua ke
-
-    cout << "Nhap nha san xuat : ";
-    cin >> NSX;
-}
-void DoDienTu :: Xuat()const
-{
-    SanPham :: Xuat();
-
-    cout <<"San xuat boi "<<NSX<<endl;
-}
-DoGiaDung :: DoGiaDung() : SanPham()
-{
-    NSX = " ";
-}
-DoGiaDung :: ~DoGiaDung()
-{
-
-}
-void DoGiaDung :: Nhap()
-{
-    SanPham :: Nhap();
-    cout << "Nhap nha san xuat : ";
-    cin >> NSX;
-}
-void DoGiaDung :: Xuat()const
-{
-    SanPham :: Xuat();
-
-    cout <<"San xuat boi "<<NSX<<endl;
-}
+void DoDienTu :: Nhap(){SanPham::Nhap();}
+void DoDienTu :: Xuat()const{SanPham::Xuat();}
+DoGiaDung :: ~DoGiaDung(){}
+void DoGiaDung :: Nhap(){SanPham::Nhap();}
+void DoGiaDung :: Xuat()const{SanPham::Xuat();}

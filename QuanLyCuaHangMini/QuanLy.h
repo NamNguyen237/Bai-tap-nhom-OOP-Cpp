@@ -11,6 +11,8 @@ class SanPham
         string maSP,NSX,ten;
         int GiaBan;
         int soluong;
+    protected:
+        virtual string LayTienToMa() const;
     public:
         SanPham();
         virtual ~SanPham();//tranh ro ri bo nho -_-
@@ -26,8 +28,10 @@ class SanPham
 class DoDienTu : public SanPham
 {
     private:
-        string NSX;
         int baohanh;
+        int congSuat;
+    protected:
+        string LayTienToMa() const override;
     public:
         DoDienTu();
         ~DoDienTu() override; //override: ghi de len class SanPham,giup compiler kiem tra thong tin
@@ -38,7 +42,10 @@ class DoDienTu : public SanPham
 class DoGiaDung : public SanPham
 {
     private:
-        string NSX;
+        string chatLieu;
+        string congDung;
+    protected:
+        string LayTienToMa() const override;
     public:
         DoGiaDung();
         ~DoGiaDung() override;
