@@ -53,7 +53,7 @@ void HoaDon::inHoaDon() const
             DanhSachSP[i] ->Xuat();//hien thi don hang
         }
     }
-    cout <<"\nTONG TIEN THANH TOAN: "<<fixed << setprecision(0) << getTongTien()<<"VND"<<endl;
+    cout <<"\nTONG TIEN THANH TOAN: "<< getTongTien()<<"VND"<<endl;
 }
 void HoaDon :: LuuFile(const string &TenFile)const 
 {
@@ -70,10 +70,10 @@ void HoaDon :: LuuFile(const string &TenFile)const
     {
         outFile << " "<<i+1<<".MaSP: "<<DanhSachSP[i]->getMaSP()
                 << "NSX: " << DanhSachSP[i] ->getNSX()
-                <<"Gia: " << fixed << setprecision(0) << DanhSachSP[i] ->getGiaBan()<<" VND\n";
+                <<"Gia: " << DanhSachSP[i]->getGiaBan()<<" VND\n";
     }
     outFile << "--------------------------------------------------------\n";
-    outFile << " TONG TIEN: " << fixed << setprecision(0) << getTongTien() << " VND\n";
+    outFile << " TONG TIEN: " << getTongTien() << " VND\n";
     outFile << "========================================================\n\n";
     outFile.close();
     cout << "Da luu hoa don "<<MaHD<<"vao file "<<TenFile<<endl;
