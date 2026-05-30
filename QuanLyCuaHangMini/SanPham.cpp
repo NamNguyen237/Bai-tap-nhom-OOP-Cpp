@@ -11,7 +11,7 @@ SanPham :: SanPham()
 {
     maSP = " ";
     ten = " ";
-    GiaBan = 0.0;
+    GiaBan = 0;
     soluong = 0;
     NSX = " ";
 }
@@ -20,7 +20,7 @@ SanPham :: ~SanPham()
 
 }
 string SanPham :: getMaSP() const {return maSP;}
-double SanPham :: getGiaBan() const {return GiaBan;}
+int SanPham :: getGiaBan() const {return GiaBan;}
 string SanPham :: getNSX() const {return NSX;}
 void SanPham :: setMaSP(string maSP) {maSP  = maSP;}
 void SanPham :: Nhap()

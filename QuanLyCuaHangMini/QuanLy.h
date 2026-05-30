@@ -9,13 +9,13 @@ class SanPham
 {
     private:
         string maSP,NSX,ten;
-        double GiaBan;
+        int GiaBan;
         int soluong;
     public:
         SanPham();
         virtual ~SanPham();//tranh ro ri bo nho -_-
         string getMaSP() const;
-        double getGiaBan() const;
+        int getGiaBan() const;
         string getNSX() const;
         void setMaSP(string ma);
         virtual void Nhap();
@@ -39,7 +39,6 @@ class DoGiaDung : public SanPham
 {
     private:
         string NSX;
-        int baohanh;
     public:
         DoGiaDung();
         ~DoGiaDung() override;
@@ -55,10 +54,11 @@ class HoaDon
     public:
         HoaDon();
         ~HoaDon();
-        double TongTien();
+        int TongTien();
         void inHoaDon() const;
         HoaDon& operator+(SanPham* sp);//cong don hoa don
-        double getTongTien() const;
+        int getTongTien() const;
+        void LuuFile(const string &tenFile) const;
 };
 
 class KhachHang
