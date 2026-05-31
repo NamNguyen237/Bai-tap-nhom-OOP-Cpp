@@ -19,10 +19,17 @@ HoaDon &HoaDon::operator+(SanPham* sp)
 {
 if (sp != NULL)
     {
-        DanhSachSP.push_back(sp);
-        cout <<"Da them san pham ["<<sp->getMaSP()<<"] vao hoa don!"
-             <<"Ma HD: "<<MaHD;
-    }
+        int SoLuongMua;
+        cout << "Nhap so luong mua: ";
+        cin >> SoLuongMua;
+        if (SoLuongMua > sp->getSoLuong()){
+            cout << "Trong kho khong du!Con lai "<<sp->getSoLuong()<<" san pham";
+            return *this;// khong them vao hoa don
+        }
+    sp -> CheckSoLuongKho(SoLuongMua);
+    DanhSachSP.push_back(sp);
+    cout << "Da them ["<<sp->getMaSP()<<"] "<<"x"<<SoLuongMua<<" vao hoa don"<<MaHD<<endl;
+        }
     return *this;//tro lai hoa don hien tai de tiep tuc mua tiep
 }
 int HoaDon::TongTien()

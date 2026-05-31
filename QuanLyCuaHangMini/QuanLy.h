@@ -11,27 +11,26 @@ class SanPham
         string maSP,NSX,ten;
         int GiaBan;
         int soluong;
-    protected:
-        virtual string LayTienToMa() const;
     public:
         SanPham();
         virtual ~SanPham();//tranh ro ri bo nho -_-
         string getMaSP() const;
         int getGiaBan() const;
         string getNSX() const;
+        int getSoLuong() const {return soluong;}//Khach hang mua bao nhieu
+        void CheckSoLuongKho(int SoLuongMua){soluong -= SoLuongMua;}//check soluong trong kho
         void setMaSP(string ma);
         virtual void Nhap();
         virtual void Xuat()const ;
+        virtual void LuuFile() const = 0;
+        static string RutGonNSX(const string &nsx);
         //17-19:dung de cac class khac (HoaDon,KhachHang) lay du lieu
 };
 
 class DoDienTu : public SanPham
 {
     private:
-        int baohanh;
-        int congSuat;
-    protected:
-        string LayTienToMa() const override;
+        string NSX;
     public:
         DoDienTu();
         ~DoDienTu() override; //override: ghi de len class SanPham,giup compiler kiem tra thong tin
@@ -42,10 +41,7 @@ class DoDienTu : public SanPham
 class DoGiaDung : public SanPham
 {
     private:
-        string chatLieu;
-        string congDung;
-    protected:
-        string LayTienToMa() const override;
+        string NSX;
     public:
         DoGiaDung();
         ~DoGiaDung() override;
