@@ -32,6 +32,10 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="HoaDon.h" />
+		<Unit filename="Menu.h" />
+		<Unit filename="SanPham.h" />
+		<Unit filename="SanPhamCon.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

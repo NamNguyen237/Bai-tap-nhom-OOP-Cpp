@@ -1,4 +1,5 @@
-#include "QuanLy.h"
+#ifndef SANPHAM_H
+#define SANPHAM_H
 #include <iostream>
 #include <map>
 #include <string>
@@ -7,8 +8,42 @@
 
 using namespace std;
 
-static map <string,int> DemMatHang;
-static string RutGonNSX(const  string &nsx)
+
+class SanPham
+{
+    private:
+        string maSP,NSX,ten;
+        int GiaBan;
+        int soluong;
+    public:
+        SanPham();
+        virtual ~SanPham();//tranh ro ri bo nho -_-
+        //dung de cac class khac (HoaDon,KhachHang) lay du lieu
+        string getMaSP() const;
+        string getTen() const;
+        int getGiaBan() const;
+        string getNSX() const;
+
+        int getSoLuong() const {return soluong;}//Khach hang mua bao nhieu
+        void CheckSoLuongKho(int SoLuongMua){soluong -= SoLuongMua;}//check soluong trong kho
+
+        void setMaSP(const string &ma);
+        void setTen(const string &ten);
+        void setNSX(const string &nsx);
+        void setGiaBan(int giaBan);
+        void setSoLuong(int soLuong);
+
+        virtual void Nhap();
+        virtual void Xuat()const ;
+        virtual void LuuFile() const = 0;
+        virtual string getLoai() const = 0;
+        static string RutGonNSX(const string &nsx);
+        static const string &DefaultFileName();
+        static map<string,int> DemMatHang;
+};
+
+
+string SanPham::RutGonNSX(const string &nsx)
 {
     if (nsx.length() <= 2)return nsx;
 
@@ -32,9 +67,15 @@ SanPham :: SanPham()
 }   
 SanPham :: ~SanPham(){}
 string SanPham :: getMaSP() const {return maSP;}
+string SanPham :: getTen() const {return ten;}
 int SanPham :: getGiaBan() const {return GiaBan;}
 string SanPham :: getNSX() const {return NSX;}
-void SanPham :: setMaSP(string ma) { this->maSP = ma;}
+void SanPham :: setMaSP(const string &ma) { this->maSP = ma;}
+void SanPham :: setTen(const string &ten) { this->ten = ten; }
+void SanPham :: setNSX(const string &nsx) { this->NSX = nsx; }
+void SanPham :: setGiaBan(int giaBan) { this->GiaBan = giaBan; }
+void SanPham :: setSoLuong(int soLuong) { this->soluong = soLuong; }
+const string &SanPham::DefaultFileName() { static const string fileName = "sanpham.txt"; return fileName; }
 void SanPham :: Nhap()
 {
     cout << "Nhap ten san pham: ";
@@ -69,14 +110,4 @@ void SanPham::Xuat()const
          <<"\nGia: "<<GiaBan
          <<"\nSo luong con lai trong kho: "<<soluong;
 }
-void DoDienTu :: Nhap(){SanPham::Nhap();}
-void DoDienTu :: Xuat()const{
-    cout<<"[DO GIA DUNG]\n";
-    SanPham::Xuat();
-}
-DoGiaDung :: ~DoGiaDung(){}
-void DoGiaDung :: Nhap(){SanPham::Nhap();}
-void DoGiaDung :: Xuat()const{
-    cout << "[DO DIEN TU]\n";
-    SanPham::Xuat();
-}
+#endif

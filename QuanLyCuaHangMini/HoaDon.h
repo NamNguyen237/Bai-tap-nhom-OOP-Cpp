@@ -1,11 +1,30 @@
-#include "QuanLy.h"
+#ifndef HOADON_H
+#define HOADON_H
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 
 using namespace std;
+
+
+class HoaDon
+{
+    private:
+        string MaHD;
+        vector <SanPham*> DanhSachSP;
+    public:
+        HoaDon();
+        ~HoaDon();
+        int TongTien();
+        void inHoaDon() const;
+        HoaDon& operator+(SanPham* sp);//cong don hoa don
+        int getTongTien() const;
+        void LuuFile(const string &tenFile) const;
+};
 
 HoaDon::HoaDon()
 {
@@ -85,3 +104,4 @@ void HoaDon :: LuuFile(const string &TenFile)const
     outFile.close();
     cout << "Da luu hoa don "<<MaHD<<"vao file "<<TenFile<<endl;
 }
+#endif
