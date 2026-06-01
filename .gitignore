@@ -28,7 +28,7 @@
 # --- 3. Thư mục Build & Các công cụ tự động (Build & CMake/vcpkg) ---
 [Bb]uild/
 build-*/
-[Dd]ebug/
+#[Dd]ebug/
 [Rr]elease/
 x64/
 x86/
