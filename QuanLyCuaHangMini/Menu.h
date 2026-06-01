@@ -9,6 +9,7 @@
 #include <limits>
 #include "SanPham.h"
 #include "SanPhamCon.h"
+#include "HoaDon.h"
 
 using namespace std;
 
@@ -16,12 +17,7 @@ using namespace std;
 static const string TEN_FILE_SANPHAM = "sanpham.txt";
 
 // Tao mot doi tuong SanPham tu mot dong ban ghi co san trong file
-SanPham* taoSanPhamTuDong(const string& loai,
-                          const string& maSP,
-                          const string& ten,
-                          const string& nsx,
-                          int giaBan,
-                          int soLuong)
+SanPham* taoSanPhamTuDong(const string& loai,const string& maSP,const string& ten,const string& nsx,int giaBan,int soLuong)
 {
     SanPham* sanPham = nullptr;
     if (loai == "DDT")
@@ -134,7 +130,16 @@ void inTatCaSanPhamTuFile(const string& tenFile)
     for (SanPham* sanPham : danhSach)
         delete sanPham;
 }
+SanPham* timSanPhamTheoMa(vector<SanPham*>& danhSach, const string& maSP)
+{
+    for (SanPham* sanPham : danhSach)
+    {
+        if (sanPham->getMaSP() == maSP)
+            return sanPham;
+    }
 
+    return nullptr;
+}
 // Xoa san pham co ma maSP va cap nhat lai file
 bool xoaSanPham(const string& tenFile, const string& maSP)
 {
@@ -225,7 +230,72 @@ bool suaSanPham(const string& tenFile, const string& maSP)
         delete sanPham;
     return ketQua;
 }
+void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
+{
+    vector<SanPham*> danhSach = docTatCaSanPham(tenFileSanPham);
+    if (danhSach.empty())
+    {
+        cout << "Khong co san pham nao de ban.\n";
+        return;
+    }
 
+    HoaDon hoaDon;
+    string tenKhachHang;
+    cout << "Nhap ten khach hang (bo trong neu la khach le): ";
+    getline(cin, tenKhachHang);
+    hoaDon.setTenKH(tenKhachHang);
+
+    bool daCoSanPham = false;
+    while (true)
+    {
+        cout << "Nhap ma san pham can mua (0 de ket thuc): ";
+        string maSP;
+        getline(cin, maSP);
+
+        if (maSP == "0")
+            break;
+
+        SanPham* sanPham = timSanPhamTheoMa(danhSach, maSP);
+        if (!sanPham)
+        {
+            cout << "Khong tim thay ma san pham: " << maSP << "\n";
+            continue;
+        }
+
+        cout << "Thong tin san pham:\n";
+        sanPham->Xuat();
+        cout << "\nNhap so luong mua: ";
+
+        int soLuongMua = 0;
+        if (!(cin >> soLuongMua))
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "So luong mua khong hop le.\n";
+            continue;
+        }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        if (hoaDon.themSanPham(sanPham, soLuongMua))
+            daCoSanPham = true;
+    }
+
+    if (!daCoSanPham)
+    {
+        cout << "Hoa don khong co san pham, khong luu file.\n";
+        return;
+    }
+
+    cout << "\n";
+    hoaDon.inHoaDon();
+    hoaDon.LuuFile(tenFileHoaDon);
+
+    if (luuDanhSachSanPham(danhSach, tenFileSanPham))
+        cout << "Da cap nhat so luong ton kho trong file " << tenFileSanPham << "\n";
+    else
+        cout << "Khong the cap nhat file san pham " << tenFileSanPham << "\n";
+
+}
 // Hien thi menu chinh len man hinh
 void hienThiMenu()
 {
