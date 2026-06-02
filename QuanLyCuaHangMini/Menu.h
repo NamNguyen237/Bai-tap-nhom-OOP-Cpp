@@ -352,7 +352,7 @@ void xuLyLuaChon(int luaChon)
                 return;
             }
     
-            sanPham->Nhap();
+            sanPham->Xuat();
             sanPham->LuuFile();
             delete sanPham;
             cout << "Da luu san pham vao file " << TEN_FILE_SANPHAM << "\n";
