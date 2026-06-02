@@ -352,7 +352,7 @@ void xuLyLuaChon(int luaChon)
                 return;
             }
     
-            sanPham->Xuat();
+            sanPham->Nhap(); //nhập đang đúng tự nhiên ông đức sửa thành xuất gây lỗi, nên sửa lại thành nhập
             sanPham->LuuFile();
             delete sanPham;
             cout << "Da luu san pham vao file " << TEN_FILE_SANPHAM << "\n";

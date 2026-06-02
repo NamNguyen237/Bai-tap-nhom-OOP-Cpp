@@ -5,6 +5,8 @@
 #include <string>
 #include <iomanip>
 #include <fstream>
+#include <cctype>
+#include <utility>
 
 using namespace std;
 
@@ -30,11 +32,14 @@ class SanPham
         void setMaSP(const string &ma);
         void setTen(const string &ten);
         void setNSX(const string &nsx);
-        void setGiaBan(int giaBan);
+        void setGiaBan(int giaBan);                      // Gán giá bán từ giá trị số nguyên cho mục đích tính toán
+        void setGiaBan(const string &rawGiaBan);         // Dùng khi nhập giá từ chuỗi có thể có dấu "." hoặc ký tự khác
         void setSoLuong(int soLuong);
 
         virtual void Nhap();
         virtual void Xuat()const ;
+        string getGiaBanFormatted() const;                // Trả về chuỗi giá có định dạng dấu chấm để in ra màn hình
+        static pair<int,string> ChuanHoaGiaBan(const string &rawGiaBan); // Chuẩn hóa đầu vào giá tiền
         virtual void LuuFile() const = 0;
         virtual string getLoai() const = 0;
         static string RutGonNSX(const string &nsx);
@@ -76,6 +81,64 @@ void SanPham :: setNSX(const string &nsx) { this->NSX = nsx; }
 void SanPham :: setGiaBan(int giaBan) { this->GiaBan = giaBan; }
 void SanPham :: setSoLuong(int soLuong) { this->soluong = soLuong; }
 const string &SanPham::DefaultFileName() { static const string fileName = "sanpham.txt"; return fileName; }
+
+// Chuyển đổi chuỗi nhập giá bán thành giá số nguyên và chuỗi định dạng in ra.
+// - Loại bỏ tất cả ký tự không phải chữ số.
+// - Nếu chuỗi sau khi loại bỏ rỗng thì trả về giá 0 và chuỗi "0".
+// - Nếu giá vượt quá INT_MAX thì giới hạn lại để tránh tràn số.
+// - Trả về pair<int,string> trong đó first là giá thực tế dùng tính toán,
+//   second là chuỗi có dấu chấm mỗi 3 chữ số để dễ đọc.
+pair<int,string> SanPham::ChuanHoaGiaBan(const string &rawGiaBan)
+{
+    string digits;
+    for (char c : rawGiaBan)
+    {
+        if (isdigit((unsigned char)c))
+            digits.push_back(c);
+    }
+
+    if (digits.empty())
+        return {0, "0"};
+
+    long long value = 0;
+    for (char c : digits)
+    {
+        value = value * 10 + (c - '0');
+        if (value > INT_MAX)
+            break;
+    }
+    if (value > INT_MAX)
+        value = INT_MAX;
+
+    int gia = static_cast<int>(value);
+    string formatted;
+    int count = 0;
+    for (int i = (int)digits.size() - 1; i >= 0; --i)
+    {
+        formatted.insert(formatted.begin(), digits[i]);
+        if (++count == 3 && i > 0)
+        {
+            formatted.insert(formatted.begin(), '.');
+            count = 0;
+        }
+    }
+
+    return {gia, formatted};
+}
+
+// Trả về chuỗi giá bán đã định dạng từ giá số nguyên hiện tại.
+string SanPham::getGiaBanFormatted() const
+{
+    return ChuanHoaGiaBan(to_string(GiaBan)).second;
+}
+
+// Gán giá bán từ chuỗi nhập liệu. Chuỗi có thể chứa dấu chấm hoặc ký tự khác,
+// hàm sẽ chuẩn hóa và chỉ giữ lại phần số.
+void SanPham::setGiaBan(const string &rawGiaBan)
+{
+    GiaBan = ChuanHoaGiaBan(rawGiaBan).first;
+}
+
 void SanPham :: Nhap()
 {
     cout << "Nhap ten san pham: ";
@@ -85,12 +148,20 @@ void SanPham :: Nhap()
     cin >> NSX;
 
     cout << "Nhap gia ban: ";
-    cin >> GiaBan;
+    string giaBanRaw;
+    cin >> giaBanRaw;
 
-    while (GiaBan <= 0){
-        cout << "Gia ban khong hop le!Xin vui long nhap lai:";
-        cin >> GiaBan;
+    // Chuẩn hóa đầu vào giá, cho phép người dùng nhập có hoặc không có dấu chấm.
+    pair<int,string> parsedGia = ChuanHoaGiaBan(giaBanRaw);
+    while (parsedGia.first <= 0)
+    {
+        cout << "Gia ban khong hop le! Xin vui long nhap lai: ";
+        cin >> giaBanRaw;
+        parsedGia = ChuanHoaGiaBan(giaBanRaw);
     }
+
+    // Lưu giá đã chuẩn hóa vào biến số để dùng cho tính toán.
+    GiaBan = parsedGia.first;
     
     cout << "Nhap so luong trong kho : ";
     cin >> soluong;
@@ -107,7 +178,7 @@ void SanPham::Xuat()const
     cout << "Ma san pham : "<<maSP
          <<"\nTen mat hang: " <<ten
          <<"\nNSX: "<<NSX
-         <<"\nGia: "<<GiaBan
+         <<"\nGia: "<<getGiaBanFormatted()   // In giá đã định dạng với dấu chấm để dễ đọc
          <<"\nSo luong con lai trong kho: "<<soluong;
 }
 #endif
