@@ -89,6 +89,16 @@ vector<SanPham*> docTatCaSanPham(const string& tenFile)
 
     return danhSach;
 }
+SanPham* timSanPhamTheoMa(vector<SanPham*>& danhSach, const string& maSP)
+{
+    for (SanPham* sanPham : danhSach)
+    {
+        if (sanPham->getMaSP() == maSP)
+            return sanPham;
+    }
+
+    return NULL;;
+}
 void inSanPhamTheoMa(const string& tenFile, const string& maSP)
 {
     vector<SanPham*> danhSach = docTatCaSanPham(tenFile);
@@ -147,16 +157,7 @@ void inTatCaSanPhamTuFile(const string& tenFile)
     for (SanPham* sanPham : danhSach)
         delete sanPham;
 }
-SanPham* timSanPhamTheoMa(vector<SanPham*>& danhSach, const string& maSP)
-{
-    for (SanPham* sanPham : danhSach)
-    {
-        if (sanPham->getMaSP() == maSP)
-            return sanPham;
-    }
 
-    return nullptr;
-}
 // Xoa san pham co ma maSP va cap nhat lai file
 bool xoaSanPham(const string& tenFile, const string& maSP)
 {
