@@ -36,6 +36,10 @@ class HoaDon
         int getTongTien() const;
         void LuuFile(const string &tenFile) const;
 };
+void HoaDon :: setTenKH(const string &TenKH)
+{
+    this->TenKH = TenKH;
+}
 bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
 {
     if (sp == NULL)
