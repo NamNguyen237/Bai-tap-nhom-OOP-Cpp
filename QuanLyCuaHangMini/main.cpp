@@ -23,7 +23,7 @@ int main()
 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        if (luaChon == 5)
+        if (luaChon == 7)
             break;
 
         xuLyLuaChon(luaChon);
