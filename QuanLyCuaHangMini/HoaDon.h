@@ -25,11 +25,12 @@ class HoaDon
         string MaHD;
         string TenKH;
         vector <ChiTietHoaDon> DanhSachSP;
+        long long tong = 0;
     public:
         HoaDon();
         ~HoaDon();
         int TongTien();
-        void inHoaDon() const;
+        void inHoaDon(); //const;
         bool themSanPham(SanPham* sp, int soLuongMua);
         HoaDon& operator+(SanPham* sp);//cong don hoa don
         void setTenKH(const string &TenKH);
@@ -105,6 +106,7 @@ int HoaDon::TongTien()
     }
     return tong;
 }
+/*
 int HoaDon::getTongTien() const//tong so tien cac san pham 
 {
     int tong = 0;
@@ -112,8 +114,8 @@ int HoaDon::getTongTien() const//tong so tien cac san pham
         tong += chiTiet.sp->getGiaBan() * chiTiet.SoLuongMua;
     }
     return tong;
-}
-void HoaDon::inHoaDon() const 
+}*/
+void HoaDon::inHoaDon()
 {
     cout << "====HOA DON MAT HANG===="<<endl;
     cout << "Ma HD: "<<MaHD<<endl;
@@ -129,12 +131,13 @@ void HoaDon::inHoaDon() const
                          << " | NSX: " << sp.nsx
                          << " | Don gia: " << sp.giaBan
                          << " | SL: " << sp.soLuongMua
-                         << " | Thanh tien: " << sp.giaBan * sp.soLuongMua << " VND\n";
+                         << " | Thanh tien: " << SanPham::ChuanHoaGiaBan(to_string(sp.giaBan * sp.soLuongMua)).second << " VND\n";
+                         tong += (sp.giaBan * sp.soLuongMua);
         }
     }
-    cout <<"\nTONG TIEN THANH TOAN: "<< getTongTien()<<"VND"<<endl;
+    cout <<"\nTONG TIEN THANH TOAN: "<< SanPham::ChuanHoaGiaBan(to_string(tong)).second <<"VND"<<endl;
 }
-void HoaDon :: LuuFile(const string &TenFile)const 
+void HoaDon :: LuuFile(const string &TenFile)const
 {
     ofstream outFile(TenFile,ios::app);//open file to continue write chu khong xoa di noi dung cu
     if (!outFile)
@@ -153,10 +156,10 @@ void HoaDon :: LuuFile(const string &TenFile)const
                        << " | NSX: " << sp.nsx
                        << " | Don gia: " << sp.giaBan
                        << " | SL: " << sp.soLuongMua
-                       << " | Thanh tien: " << sp.giaBan * sp.soLuongMua << " VND\n";
+                       << " | Thanh tien: " << SanPham::ChuanHoaGiaBan(to_string(sp.giaBan * sp.soLuongMua)).second << " VND\n";
     }
     outFile << "--------------------------------------------------------\n";
-    outFile << " TONG TIEN: " << getTongTien() << " VND\n";
+    outFile << " TONG TIEN: " << SanPham::ChuanHoaGiaBan(to_string(tong)).second << " VND\n";
     outFile << "========================================================\n\n";
     outFile.close();
     cout << "Da luu hoa don "<<MaHD<<"vao file "<<TenFile<<endl;
