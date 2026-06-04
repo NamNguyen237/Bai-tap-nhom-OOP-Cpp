@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <cctype>
 #include "SanPham.h"
 #include "SanPhamCon.h"
 #include "HoaDon.h"
@@ -393,6 +394,120 @@ bool xoaHoaDonCuNhat(const string& tenFile)
 
     return true;
 }
+
+string layMaHoaDonTuHoaDon(const string& hoaDonText)
+{
+    const string marker = " HOA DON BAN HANG: ";
+    size_t pos = hoaDonText.find(marker);
+    if (pos == string::npos)
+        return string();
+
+    pos += marker.size();
+    size_t endPos = hoaDonText.find_first_of("\r\n", pos);
+    if (endPos == string::npos)
+        endPos = hoaDonText.size();
+
+    string maHD = hoaDonText.substr(pos, endPos - pos);
+    while (!maHD.empty() && isspace(static_cast<unsigned char>(maHD.front())))
+        maHD.erase(maHD.begin());
+    while (!maHD.empty() && isspace(static_cast<unsigned char>(maHD.back())))
+        maHD.pop_back();
+
+    return maHD;
+}
+
+string chuanHoaMaHoaDon(const string& maHoaDon)
+{
+    string result = maHoaDon;
+    while (!result.empty() && isspace(static_cast<unsigned char>(result.front())))
+        result.erase(result.begin());
+    while (!result.empty() && isspace(static_cast<unsigned char>(result.back())))
+        result.pop_back();
+
+    if (result.empty())
+        return result;
+
+    if (result == "0")
+        return result;
+
+    bool hasLetters = false;
+    for (char ch : result)
+    {
+        if (isalpha(static_cast<unsigned char>(ch)))
+        {
+            hasLetters = true;
+            break;
+        }
+    }
+
+    if (!hasLetters)
+        result = "Ma HD " + result;
+
+    return result;
+}
+
+void inHoaDon(const string& tenFile, const string& maHoaDon)
+{
+    vector<string> danhSachHoaDon = docTatCaHoaDon(tenFile);
+    if (danhSachHoaDon.empty())
+    {
+        cout << "Chua co hoa don nao trong file " << tenFile << "\n";
+        return;
+    }
+
+    if (maHoaDon.empty() || maHoaDon == "0")
+    {
+        inHoaDonMoiNhatTuFile(tenFile);
+        return;
+    }
+
+    string maCanTim = chuanHoaMaHoaDon(maHoaDon);
+    for (const string& hoaDon : danhSachHoaDon)
+    {
+        if (layMaHoaDonTuHoaDon(hoaDon) == maCanTim)
+        {
+            cout << "=== HOA DON " << maCanTim << " ===\n";
+            cout << hoaDon;
+            return;
+        }
+    }
+
+    cout << "Khong tim thay hoa don: " << maHoaDon << "\n";
+}
+
+bool xoaHoaDon(const string& tenFile, const string& maHoaDon)
+{
+    if (maHoaDon.empty())
+        return xoaHoaDonCuNhat(tenFile);
+
+    vector<string> danhSachHoaDon = docTatCaHoaDon(tenFile);
+    if (danhSachHoaDon.empty())
+        return false;
+
+    string maCanXoa = chuanHoaMaHoaDon(maHoaDon);
+    for (auto it = danhSachHoaDon.begin(); it != danhSachHoaDon.end(); ++it)
+    {
+        if (layMaHoaDonTuHoaDon(*it) == maCanXoa)
+        {
+            danhSachHoaDon.erase(it);
+            ofstream output(tenFile, ios::trunc);
+            if (!output)
+                return false;
+
+            for (size_t i = 0; i < danhSachHoaDon.size(); ++i)
+            {
+                output << danhSachHoaDon[i];
+                if (i + 1 < danhSachHoaDon.size())
+                    output << "\n";
+            }
+
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Hien thi menu chinh len man hinh
 void hienThiMenu()
 {
@@ -403,8 +518,9 @@ void hienThiMenu()
         cout << "4. Xoa san pham theo ma\n";
         cout << "5. Sua san pham theo ma\n";
         cout << "6. Lap hoa don ban hang va tinh tong tien\n";
-        cout << "7. In hoa don moi nhat va xoa hoa don cu nhat\n";
-        cout << "8. Thoat\n";
+        cout << "7. In hoa don\n";
+        cout << "8. Xoa hoa don\n";
+        cout << "9. Thoat\n";
         cout << "Lua chon: ";
 }
 
@@ -472,9 +588,25 @@ void xuLyLuaChon(int luaChon)
         }
         else if (luaChon == 7)
         {
-            inHoaDonMoiNhatTuFile(TEN_FILE_HOADON);
-            if (xoaHoaDonCuNhat(TEN_FILE_HOADON))
-                cout << "Da xoa hoa don cu nhat trong file " << TEN_FILE_HOADON << "\n";
+            cout << "Nhap ma hoa don can in (bo trong de in hoa don moi nhat): ";
+            string maHoaDon;
+            getline(cin, maHoaDon);
+            inHoaDon(TEN_FILE_HOADON, maHoaDon);
+        }
+        else if (luaChon == 8)
+        {
+            cout << "Nhap ma hoa don can xoa (bo trong de xoa hoa don cu nhat): ";
+            string maHoaDon;
+            getline(cin, maHoaDon);
+            if (xoaHoaDon(TEN_FILE_HOADON, maHoaDon))
+            {
+                if (maHoaDon.empty())
+                    cout << "Da xoa hoa don cu nhat trong file.\n";
+                else
+                    cout << "Da xoa hoa don " << maHoaDon << " trong file.\n";
+            }
+            else
+                cout << "Khong tim thay hoa don: " << maHoaDon << "\n";
         }
         else
         {

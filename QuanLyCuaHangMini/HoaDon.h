@@ -72,7 +72,26 @@ bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
 }
 HoaDon::HoaDon()
 {
-    MaHD = "Ma HD " + to_string(rand()%9000+1000);//random so ma HD
+    time_t now = time(nullptr);
+    tm localTime;
+#ifdef _WIN32
+    localtime_s(&localTime, &now);
+#else
+    localtime_r(&now, &localTime);
+#endif
+
+    auto twoDigit = [](int value) {
+        string s = to_string(value);
+        return (s.size() < 2) ? string("0") + s : s;
+    };
+
+    MaHD = "Ma HD "
+            + twoDigit(localTime.tm_sec) + "-"
+           + twoDigit(localTime.tm_min) + "-"
+           + twoDigit(localTime.tm_hour) + "-"
+           + twoDigit(localTime.tm_mday) + "-"
+           + twoDigit(localTime.tm_mon + 1) + "-"
+           + to_string(localTime.tm_year + 1900);
     TenKH = "";
 }
 HoaDon::~HoaDon()
@@ -106,7 +125,7 @@ int HoaDon::TongTien()
     }
     return tong;
 }
-    void HoaDon::inHoaDon()
+void HoaDon::inHoaDon()
 {
     cout << "====HOA DON MAT HANG===="<<endl;
     cout << "Ma HD: "<<MaHD<<endl;
