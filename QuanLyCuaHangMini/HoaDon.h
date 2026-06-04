@@ -11,13 +11,13 @@
 using namespace std;
 struct ChiTietHoaDon
 {
-    SanPham *sp;
-    int SoLuongMua;
+    SanPham *sp = nullptr;
+    int SoLuongMua = 0;
     string maSP;
     string tenSP;
     string nsx;
-    int giaBan;
-    int soLuongMua;
+    int giaBan = 0;
+    int soLuongMua = 0;
 };
 class HoaDon
 {
@@ -43,7 +43,7 @@ void HoaDon :: setTenKH(const string &TenKH)
 }
 bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
 {
-    if (sp == NULL)
+    if (sp == nullptr)
         return false;
 
     if (soLuongMua <= 0)
@@ -52,7 +52,8 @@ bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
         return false;
     }
 
-    if (soLuongMua > sp->getSoLuong()){
+    if (soLuongMua > sp->getSoLuong())
+    {
         cout << "Trong kho khong du! Con lai "<<sp->getSoLuong()<<" san pham\n";
         return false;// khong them vao hoa don
     }
@@ -60,6 +61,8 @@ bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
     sp->CheckSoLuongKho(soLuongMua);
 
     ChiTietHoaDon chiTiet;
+    chiTiet.sp = sp;
+    chiTiet.SoLuongMua = soLuongMua;
     chiTiet.maSP = sp->getMaSP();
     chiTiet.tenSP = sp->getTen();
     chiTiet.nsx = sp->getNSX();
@@ -70,18 +73,11 @@ bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
     cout << "Da them ["<<sp->getMaSP()<<"] x"<<soLuongMua<<" vao hoa don "<<MaHD<<endl;
     return true;
 }
-HoaDon::HoaDon()
-{
-    MaHD = "Ma HD " + to_string(rand()%9000+1000);//random so ma HD
-    TenKH = "";
-}
-HoaDon::~HoaDon()
-{
-    DanhSachSP.clear();//xoa danh sach
-}
+HoaDon::HoaDon() : MaHD("Ma HD " + to_string(rand() % 9000 + 1000)), TenKH("") {}//random so ma HD
+HoaDon::~HoaDon() = default;
 HoaDon &HoaDon::operator+(SanPham* sp)
 {
-    if (sp == NULL)
+    if (sp == nullptr)
     {
         cout << "San pham khong hop le.\n";
         return *this;
@@ -89,24 +85,22 @@ HoaDon &HoaDon::operator+(SanPham* sp)
     int SoLuongMua = 0;
     cout << "Nhap so luong mua: ";
     cin >> SoLuongMua;
-    sp -> CheckSoLuongKho(SoLuongMua);
-    ChiTietHoaDon chiTiet;
-    chiTiet.sp = sp;
-    chiTiet.SoLuongMua = SoLuongMua;
-    DanhSachSP.push_back(chiTiet);
-    cout << "Da them ["<<sp->getMaSP()<<"] "<<"x"<<SoLuongMua<<" vao hoa don"<<MaHD<<endl;
-        
+    themSanPham(sp, SoLuongMua);
     return *this;//tro lai hoa don hien tai de tiep tuc mua tiep
 }
 int HoaDon::TongTien()
 {
-    int tong = 0;
-    for (const auto& chiTiet : DanhSachSP){
-        tong += chiTiet.sp->getGiaBan() * chiTiet.SoLuongMua;//lay gia ban cua tung loai san pham
-    }
-    return tong;
+    return getTongTien();
 }
-    void HoaDon::inHoaDon()
+int HoaDon::getTongTien() const
+{
+    int tongTien = 0;
+    for (const auto& chiTiet : DanhSachSP)
+        tongTien += chiTiet.giaBan * chiTiet.soLuongMua;//lay gia ban cua tung loai san pham
+
+    return tongTien;
+}
+void HoaDon::inHoaDon()
 {
     cout << "====HOA DON MAT HANG===="<<endl;
     cout << "Ma HD: "<<MaHD<<endl;
@@ -114,19 +108,23 @@ int HoaDon::TongTien()
     if (DanhSachSP.empty())
     {
         cout << "Khong co san pham nao!"<<endl;
-    }else{
-        for (size_t i = 0; i < DanhSachSP.size();i++){//size_t:kich thuoc cua danh sach
-        const ChiTietHoaDon &sp = DanhSachSP[i];
-                    cout << i + 1 << ". Ma SP: " << sp.maSP
-                         << " | Ten: " << sp.tenSP
-                         << " | NSX: " << sp.nsx
-                         << " | Don gia: " << SanPham::ChuanHoaGiaBan(to_string(sp.giaBan)).second << " VND"
-                         << " | SL: " << sp.soLuongMua
-                         << " | Thanh tien: " << SanPham::ChuanHoaGiaBan(to_string(sp.giaBan * sp.soLuongMua)).second << " VND\n";
-                         tong += (sp.giaBan * sp.soLuongMua);
+    }
+    else
+    {
+        for (size_t i = 0; i < DanhSachSP.size(); i++)//size_t:kich thuoc cua danh sach
+        {
+            const ChiTietHoaDon &sp = DanhSachSP[i];
+            int thanhTien = sp.giaBan * sp.soLuongMua;
+            cout << i + 1 << ". Ma SP: " << sp.maSP
+                 << " | Ten: " << sp.tenSP
+                 << " | NSX: " << sp.nsx
+                 << " | Don gia: " << SanPham::ChuanHoaGiaBan(to_string(sp.giaBan)).second << " VND"
+                 << " | SL: " << sp.soLuongMua
+                 << " | Thanh tien: " << SanPham::ChuanHoaGiaBan(to_string(thanhTien)).second << " VND\n";
         }
     }
-    cout <<"\nTONG TIEN THANH TOAN: "<< SanPham::ChuanHoaGiaBan(to_string(tong)).second <<"VND"<<endl;
+    tong = getTongTien();
+    cout <<"\nTONG TIEN THANH TOAN: "<< SanPham::ChuanHoaGiaBan(to_string(tong)).second <<" VND"<<endl;
 }
 void HoaDon :: LuuFile(const string &TenFile)const
 {
@@ -139,18 +137,21 @@ void HoaDon :: LuuFile(const string &TenFile)const
     outFile << "========================================================\n";
     outFile << " HOA DON BAN HANG: " << MaHD << "\n";
     outFile << "--------------------------------------------------------\n";
-    for (size_t i = 0; i < DanhSachSP.size();i++)
+    long long tongHoaDon = 0;
+    for (size_t i = 0; i < DanhSachSP.size(); i++)
     {
        const ChiTietHoaDon &sp = DanhSachSP[i];
-               outFile << " "<<i+1<<". MaSP: "<<sp.maSP
-                       << " | Ten: " << sp.tenSP
-                       << " | NSX: " << sp.nsx
-                       << " | Don gia: " << SanPham::ChuanHoaGiaBan(to_string(sp.giaBan)).second << " VND"
-                       << " | SL: " << sp.soLuongMua
-                       << " | Thanh tien: " << SanPham::ChuanHoaGiaBan(to_string(sp.giaBan * sp.soLuongMua)).second << " VND\n";
+       int thanhTien = sp.giaBan * sp.soLuongMua;
+       tongHoaDon += thanhTien;
+       outFile << " "<<i+1<<". MaSP: "<<sp.maSP
+               << " | Ten: " << sp.tenSP
+               << " | NSX: " << sp.nsx
+               << " | Don gia: " << SanPham::ChuanHoaGiaBan(to_string(sp.giaBan)).second << " VND"
+               << " | SL: " << sp.soLuongMua
+               << " | Thanh tien: " << SanPham::ChuanHoaGiaBan(to_string(thanhTien)).second << " VND\n";
     }
     outFile << "--------------------------------------------------------\n";
-    outFile << " TONG TIEN: " << SanPham::ChuanHoaGiaBan(to_string(tong)).second << " VND\n";
+    outFile << " TONG TIEN: " << SanPham::ChuanHoaGiaBan(to_string(tongHoaDon)).second << " VND\n";
     outFile << "========================================================\n\n";
     outFile.close();
     cout << "Da luu hoa don "<<MaHD<<" vao file "<<TenFile<<endl;

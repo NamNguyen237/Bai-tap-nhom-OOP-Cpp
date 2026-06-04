@@ -7,6 +7,9 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <iomanip>
+#include <algorithm>
+#include <cctype>
 #include "SanPham.h"
 #include "SanPhamCon.h"
 #include "HoaDon.h"
@@ -16,6 +19,14 @@ using namespace std;
 // Ten file du lieu co so
 static const string TEN_FILE_SANPHAM = "sanpham.txt";
 static const string TEN_FILE_HOADON = "hoadon.txt";
+
+void giaiPhongDanhSachSanPham(vector<SanPham*>& danhSach)
+{
+    for (SanPham* sanPham : danhSach)
+        delete sanPham;
+
+    danhSach.clear();
+}
 
 // Tao mot doi tuong SanPham tu mot dong ban ghi co san trong file
 SanPham* taoSanPhamTuDong(const string& loai,const string& maSP,const string& ten,const string& nsx,int giaBan,int soLuong)
@@ -80,8 +91,18 @@ vector<SanPham*> docTatCaSanPham(const string& tenFile)
             continue; // bo qua dong khong hop le
         }
 
-        int giaBan = stoi(giaBanStr);
-        int soLuong = stoi(soLuongStr);
+        int giaBan = 0;
+        int soLuong = 0;
+        try
+        {
+            giaBan = stoi(giaBanStr);
+            soLuong = stoi(soLuongStr);
+        }
+        catch (...)
+        {
+            continue;
+        }
+
         SanPham* sanPham = taoSanPhamTuDong(loai, maSP, ten, nsx, giaBan, soLuong);
         if (sanPham)
             danhSach.push_back(sanPham);
@@ -97,7 +118,7 @@ SanPham* timSanPhamTheoMa(vector<SanPham*>& danhSach, const string& maSP)
             return sanPham;
     }
 
-    return NULL;;
+    return nullptr;
 }
 void inSanPhamTheoMa(const string& tenFile, const string& maSP)
 {
@@ -107,14 +128,14 @@ void inSanPhamTheoMa(const string& tenFile, const string& maSP)
     if (!sanPham)
     {
         cout << "Khong tim thay ma san pham: " << maSP << "\n";
-        danhSach.clear();
+        giaiPhongDanhSachSanPham(danhSach);
         return;
     }
 
     cout << "=== THONG TIN SAN PHAM ===\n";
     sanPham->Xuat();
     cout << "\n";
-    
+    giaiPhongDanhSachSanPham(danhSach);
 }
 // Luu danh sach san pham vao file, ghi de toan bo noi dung cu
 bool luuDanhSachSanPham(const vector<SanPham*>& danhSach, const string& tenFile)
@@ -154,8 +175,7 @@ void inTatCaSanPhamTuFile(const string& tenFile)
         cout << "\n------------------------------------\n";
     }
 
-    for (SanPham* sanPham : danhSach)
-        delete sanPham;
+    giaiPhongDanhSachSanPham(danhSach);
 }
 
 // Xoa san pham co ma maSP va cap nhat lai file
@@ -177,14 +197,12 @@ bool xoaSanPham(const string& tenFile, const string& maSP)
 
     if (!daXoa)
     {
-        for (SanPham* sanPham : danhSach)
-            delete sanPham;
+        giaiPhongDanhSachSanPham(danhSach);
         return false;
     }
 
     bool ketQua = luuDanhSachSanPham(danhSach, tenFile);
-    for (SanPham* sanPham : danhSach)
-        delete sanPham;
+    giaiPhongDanhSachSanPham(danhSach);
     return ketQua;
 }
 
@@ -192,21 +210,11 @@ bool xoaSanPham(const string& tenFile, const string& maSP)
 bool suaSanPham(const string& tenFile, const string& maSP)
 {
     vector<SanPham*> danhSach = docTatCaSanPham(tenFile);
-    SanPham* sanPhamChinhSua = nullptr;
-
-    for (SanPham* sanPham : danhSach)
-    {
-        if (sanPham->getMaSP() == maSP)
-        {
-            sanPhamChinhSua = sanPham;
-            break;
-        }
-    }
+    SanPham* sanPhamChinhSua = timSanPhamTheoMa(danhSach, maSP);
 
     if (!sanPhamChinhSua)
     {
-        for (SanPham* sanPham : danhSach)
-            delete sanPham;
+        giaiPhongDanhSachSanPham(danhSach);
         return false;
     }
 
@@ -229,7 +237,7 @@ bool suaSanPham(const string& tenFile, const string& maSP)
     getline(cin, duLieu);
     if (!duLieu.empty())
     {
-        int giaBan = stoi(duLieu);
+        int giaBan = SanPham::ChuanHoaGiaBan(duLieu).first;
         if (giaBan > 0)
             sanPhamChinhSua->setGiaBan(giaBan);
     }
@@ -238,14 +246,20 @@ bool suaSanPham(const string& tenFile, const string& maSP)
     getline(cin, duLieu);
     if (!duLieu.empty())
     {
-        int soLuong = stoi(duLieu);
-        if (soLuong >= 0)
-            sanPhamChinhSua->setSoLuong(soLuong);
+        try
+        {
+            int soLuong = stoi(duLieu);
+            if (soLuong >= 0)
+                sanPhamChinhSua->setSoLuong(soLuong);
+        }
+        catch (...)
+        {
+            cout << "So luong khong hop le, giu nguyen gia tri cu.\n";
+        }
     }
 
     bool ketQua = luuDanhSachSanPham(danhSach, tenFile);
-    for (SanPham* sanPham : danhSach)
-        delete sanPham;
+    giaiPhongDanhSachSanPham(danhSach);
     return ketQua;
 }
 void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
@@ -301,8 +315,7 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
     if (!daCoSanPham)
     {
         cout << "Hoa don khong co san pham, khong luu file.\n";
-            for (SanPham* sanPham : danhSach)
-                delete sanPham;
+        giaiPhongDanhSachSanPham(danhSach);
         return;
     }
 
@@ -315,6 +328,7 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
     else
         cout << "Khong the cap nhat file san pham " << tenFileSanPham << "\n";
 
+    giaiPhongDanhSachSanPham(danhSach);
 }
 vector<string> docTatCaHoaDon(const string& tenFile)
 {
@@ -393,25 +407,63 @@ bool xoaHoaDonCuNhat(const string& tenFile)
 
     return true;
 }
+
+const int DO_RONG_MENU = 62;
+
+string canGiua(const string& noiDung, int doRong)
+{
+    if ((int)noiDung.size() >= doRong)
+        return noiDung.substr(0, doRong);
+
+    int khoangTrongTrai = (doRong - (int)noiDung.size()) / 2;
+    int khoangTrongPhai = doRong - (int)noiDung.size() - khoangTrongTrai;
+    return string(khoangTrongTrai, ' ') + noiDung + string(khoangTrongPhai, ' ');
+}
+
+void inDuongKeMenu(char kyTu)
+{
+    std::cout << "+" << string(DO_RONG_MENU - 2, kyTu) << "+\n";
+}
+
+void inDongCanGiuaMenu(const string& noiDung)
+{
+    std::cout << "|" << canGiua(noiDung, DO_RONG_MENU - 2) << "|\n";
+}
+
+void inDongMenu(int soThuTu, const string& noiDung)
+{
+    stringstream dong;
+    dong << soThuTu << ". " << noiDung;
+    std::cout << "| " << std::left << std::setw(DO_RONG_MENU - 4)
+              << dong.str().substr(0, DO_RONG_MENU - 4) << " |\n";
+}
+
 // Hien thi menu chinh len man hinh
 void hienThiMenu()
 {
-    cout << "\n=== QUAN LY SAN PHAM TU FILE TXT ===\n";
-        cout << "1. Them san pham moi va luu file\n";
-        cout << "2. In tat ca san pham tu file\n";
-        cout << "3. In thong tin san pham theo ma\n";
-        cout << "4. Xoa san pham theo ma\n";
-        cout << "5. Sua san pham theo ma\n";
-        cout << "6. Lap hoa don ban hang va tinh tong tien\n";
-        cout << "7. In hoa don moi nhat va xoa hoa don cu nhat\n";
-        cout << "8. Thoat\n";
-        cout << "Lua chon: ";
+    std::cout << "\n";
+    inDuongKeMenu('=');
+    inDongCanGiuaMenu("QUAN LY CUA HANG MINI");
+    inDongCanGiuaMenu("Du lieu TXT: san pham - hoa don");
+    inDuongKeMenu('-');
+    inDongMenu(1, "Them san pham moi va luu file");
+    inDongMenu(2, "In tat ca san pham tu file");
+    inDongMenu(3, "In thong tin san pham theo ma");
+    inDongMenu(4, "Xoa san pham theo ma");
+    inDongMenu(5, "Sua san pham theo ma");
+    inDongMenu(6, "Lap hoa don ban hang va tinh tong tien");
+    inDongMenu(7, "In hoa don moi nhat va xoa hoa don cu nhat");
+    inDongMenu(8, "Thoat chuong trinh");
+    inDuongKeMenu('=');
+    std::cout << "Nhap lua chon [1-8]: ";
 }
 
 // Xu ly lua chon nguoi dung da chon tu menu
 void xuLyLuaChon(int luaChon)
 {
-    if (luaChon == 1)
+    switch (luaChon)
+    {
+        case 1:
         {
             cout << "Chon loai san pham: 1. Do dien tu  2. Do gia dung\n";
             cout << "Lua chon: ";
@@ -434,19 +486,25 @@ void xuLyLuaChon(int luaChon)
             sanPham->LuuFile();
             delete sanPham;
             cout << "Da luu san pham vao file " << TEN_FILE_SANPHAM << "\n";
+            break;
         }
-        else if (luaChon == 2)
+
+        case 2:
         {
             inTatCaSanPhamTuFile(TEN_FILE_SANPHAM);
+            break;
         }
-        else if (luaChon == 3)
+
+        case 3:
         {
             cout << "Nhap ma san pham can in: ";
             string maSP;
             getline(cin, maSP);
             inSanPhamTheoMa(TEN_FILE_SANPHAM, maSP);
+            break;
         }
-        else if (luaChon == 4)
+
+        case 4:
         {
             cout << "Nhap ma san pham can xoa: ";
             string maSP;
@@ -455,31 +513,41 @@ void xuLyLuaChon(int luaChon)
                 cout << "Da xoa san pham " << maSP << " tu file.\n";
             else
                 cout << "Khong tim thay ma san pham: " << maSP << "\n";
+            break;
         }
-        else if (luaChon == 5)
+
+        case 5:
         {
-            cout << "Nhap ma san pham can sua: ";
-            string maSP;
-            getline(cin, maSP);
+            std::cout << "Nhap ma san pham can sua: ";
+            std::string maSP;
+            std::getline(std::cin, maSP);
             if (suaSanPham(TEN_FILE_SANPHAM, maSP))
-                cout << "Da cap nhat thong tin san pham " << maSP << " trong file.\n";
+                std::cout << "Da cap nhat thong tin san pham " << maSP << " trong file.\n";
             else
-                cout << "Khong tim thay ma san pham: " << maSP << "\n";
+                std::cout << "Khong tim thay ma san pham: " << maSP << "\n";
+            break;
         }
-        else if (luaChon == 6)
+
+        case 6:
         {
             lapHoaDonBanHang(TEN_FILE_SANPHAM, TEN_FILE_HOADON);
+            break;
         }
-        else if (luaChon == 7)
+
+        case 7:
         {
             inHoaDonMoiNhatTuFile(TEN_FILE_HOADON);
             if (xoaHoaDonCuNhat(TEN_FILE_HOADON))
                 cout << "Da xoa hoa don cu nhat trong file " << TEN_FILE_HOADON << "\n";
+            break;
         }
-        else
+
+        default:
         {
             cout << "Lua chon khong hop le. Vui long thu lai.\n";
+            break;
         }
+    }
 }
 
 #endif // MENU_H

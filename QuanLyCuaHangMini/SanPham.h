@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <fstream>
 #include <cctype>
+#include <climits>
 #include <utility>
 
 using namespace std;
@@ -50,27 +51,24 @@ class SanPham
 
 string SanPham::RutGonNSX(const string &nsx)
 {
-    if (nsx.length() <= 2)return nsx;
+    if (nsx.length() <= 2)
+        return nsx;
 
-    const string NguyenAm = "aeiouAEIOU";//neu gap cac nguyen am
-    string result = "";//bo qua nguyen am
-    for(char c : nsx)
+    static const string NguyenAm = "aeiouAEIOU";//neu gap cac nguyen am
+    string result;//bo qua nguyen am
+    for (char c : nsx)
     {
-        if(isalpha(c)&&NguyenAm.find(c) == string :: npos)//ktra xem co phai chu cai, va cac chu do co cac nguyen am khong
-        result += (char)toupper(c);
-        if (result.size() == 2) break;
+        unsigned char kyTu = static_cast<unsigned char>(c);
+        if (isalpha(kyTu) && NguyenAm.find(c) == string::npos)//ktra xem co phai chu cai, va cac chu do co cac nguyen am khong
+            result += static_cast<char>(toupper(kyTu));
+
+        if (result.size() == 2)
+            break;
     }
     return result;
 }
-SanPham :: SanPham()
-{
-    maSP = " ";
-    ten = " ";
-    GiaBan = 0;
-    soluong = 0;
-    NSX = " ";
-}   
-SanPham :: ~SanPham(){}
+SanPham :: SanPham() : maSP(" "), NSX(" "), ten(" "), GiaBan(0), soluong(0) {}
+SanPham :: ~SanPham() = default;
 string SanPham :: getMaSP() const {return maSP;}
 string SanPham :: getTen() const {return ten;}
 int SanPham :: getGiaBan() const {return GiaBan;}
@@ -112,10 +110,11 @@ pair<int,string> SanPham::ChuanHoaGiaBan(const string &rawGiaBan)
 
     int gia = static_cast<int>(value);
     string formatted;
+    string giaDaChuanHoa = to_string(gia);
     int count = 0;
-    for (int i = (int)digits.size() - 1; i >= 0; --i)
+    for (int i = (int)giaDaChuanHoa.size() - 1; i >= 0; --i)
     {
-        formatted.insert(formatted.begin(), digits[i]);
+        formatted.insert(formatted.begin(), giaDaChuanHoa[i]);
         if (++count == 3 && i > 0)
         {
             formatted.insert(formatted.begin(), '.');

@@ -6,6 +6,21 @@
 #include <string>
 #include <iomanip>
 #include <fstream>
+
+using namespace std;
+static void luuSanPhamRaFile(const SanPham& sanPham)
+{
+    ofstream out(SanPham::DefaultFileName(), ios::app);
+    if (!out)
+    {
+        cerr << "Khong the mo file " << SanPham::DefaultFileName() << " de luu san pham." << endl;
+        return;
+    }
+
+    out << sanPham.getLoai() << "|" << sanPham.getMaSP() << "|" << sanPham.getTen() << "|" << sanPham.getNSX()
+        << "|" << sanPham.getGiaBan() << "|" << sanPham.getSoLuong() << "\n";
+}
+
 class DoDienTu : public SanPham
 {
     public:
@@ -28,8 +43,8 @@ class DoGiaDung : public SanPham
         string getLoai() const override;
 };
 
-DoDienTu::DoDienTu() {}
-DoGiaDung::DoGiaDung() {}
+DoDienTu::DoDienTu() = default;
+DoGiaDung::DoGiaDung() = default;
 
 void DoDienTu :: Nhap(){SanPham::Nhap();}
 void DoDienTu :: Xuat()const{
@@ -38,21 +53,14 @@ void DoDienTu :: Xuat()const{
 }
 void DoDienTu::LuuFile() const
 {
-    ofstream out(SanPham::DefaultFileName(), ios::app);
-    if (!out)
-    {
-        cerr << "Khong the mo file " << SanPham::DefaultFileName() << " de luu san pham." << endl;
-        return;
-    }
-    out << getLoai() << "|" << getMaSP() << "|" << getTen() << "|" << getNSX()
-        << "|" << getGiaBan() << "|" << getSoLuong() << "\n";
+    luuSanPhamRaFile(*this);
 }
 string DoDienTu::getLoai() const
 {
     return "DDT";
 }
-DoDienTu :: ~DoDienTu(){}
-DoGiaDung :: ~DoGiaDung(){}
+DoDienTu :: ~DoDienTu() = default;
+DoGiaDung :: ~DoGiaDung() = default;
 void DoGiaDung :: Nhap(){SanPham::Nhap();}
 void DoGiaDung :: Xuat()const{
     cout << "[DO GIA DUNG]\n";
@@ -60,14 +68,7 @@ void DoGiaDung :: Xuat()const{
 }
 void DoGiaDung::LuuFile() const
 {
-    ofstream out(SanPham::DefaultFileName(), ios::app);
-    if (!out)
-    {
-        cerr << "Khong the mo file " << SanPham::DefaultFileName() << " de luu san pham." << endl;
-        return;
-    }
-    out << getLoai() << "|" << getMaSP() << "|" << getTen() << "|" << getNSX()
-        << "|" << getGiaBan() << "|" << getSoLuong() << "\n";
+    luuSanPhamRaFile(*this);
 }
 string DoGiaDung::getLoai() const
 {
