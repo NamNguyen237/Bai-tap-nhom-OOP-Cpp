@@ -73,8 +73,15 @@ bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
     cout << "Da them ["<<sp->getMaSP()<<"] x"<<soLuongMua<<" vao hoa don "<<MaHD<<endl;
     return true;
 }
-HoaDon::HoaDon() : MaHD("Ma HD " + to_string(rand() % 9000 + 1000)), TenKH("") {}//random so ma HD
-HoaDon::~HoaDon() = default;
+HoaDon::HoaDon()
+{
+    MaHD = "Ma HD " + to_string(rand()%9000+1000);//random so ma HD
+    TenKH = "";
+}
+HoaDon::~HoaDon()
+{
+    DanhSachSP.clear();//xoa danh sach
+}
 HoaDon &HoaDon::operator+(SanPham* sp)
 {
     if (sp == nullptr)
