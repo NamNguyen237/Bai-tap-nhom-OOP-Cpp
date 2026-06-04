@@ -23,7 +23,7 @@ int main()
 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        if (luaChon == 7)
+        if (luaChon == 8)
             break;
 
         xuLyLuaChon(luaChon);
@@ -31,4 +31,4 @@ int main()
 
     cout << "Ket thuc chuong trinh.\n";
     return 0;
-}
+};

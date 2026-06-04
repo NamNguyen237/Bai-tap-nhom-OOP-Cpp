@@ -1,3 +1,3 @@
-DDT|SM01|May Giat Samsung|Samsung|10000000|50
+DDT|SM01|May Giat Samsung|Samsung|10000000|0
 DGD|SN01|Chao|Sunhouse|110000|25
-DDT|XM01|Dien thoai Redmi Note 15 5G|Xiaomi|7000000|800
+DDT|XM01|Dien thoai Redmi Note 15 5G|Xiaomi|7000000|700

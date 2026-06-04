@@ -316,6 +316,83 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
         cout << "Khong the cap nhat file san pham " << tenFileSanPham << "\n";
 
 }
+vector<string> docTatCaHoaDon(const string& tenFile)
+{
+    vector<string> danhSachHoaDon;
+    ifstream input(tenFile);
+    if (!input)
+        return danhSachHoaDon;
+
+    const string duongKe = "========================================================";
+    string dong;
+    string hoaDon;
+    bool dangDocHoaDon = false;
+
+    while (getline(input, dong))
+    {
+        if (!dong.empty() && dong.back() == '\r')
+            dong.pop_back();
+
+        if (dong == duongKe)
+        {
+            if (!dangDocHoaDon)
+            {
+                dangDocHoaDon = true;
+                hoaDon.clear();
+                hoaDon += dong + "\n";
+            }
+            else
+            {
+                hoaDon += dong + "\n";
+                danhSachHoaDon.push_back(hoaDon);
+                hoaDon.clear();
+                dangDocHoaDon = false;
+            }
+            continue;
+        }
+
+        if (dangDocHoaDon)
+            hoaDon += dong + "\n";
+    }
+
+    if (dangDocHoaDon && !hoaDon.empty())
+        danhSachHoaDon.push_back(hoaDon);
+
+    return danhSachHoaDon;
+}
+void inHoaDonMoiNhatTuFile(const string& tenFile)
+{
+    vector<string> danhSachHoaDon = docTatCaHoaDon(tenFile);
+    if (danhSachHoaDon.empty())
+    {
+        cout << "Chua co hoa don nao trong file " << tenFile << "\n";
+        return;
+    }
+
+    cout << "=== HOA DON MOI NHAT ===\n";
+    cout << danhSachHoaDon.back();
+}
+bool xoaHoaDonCuNhat(const string& tenFile)
+{
+    vector<string> danhSachHoaDon = docTatCaHoaDon(tenFile);
+    if (danhSachHoaDon.empty())
+        return false;
+
+    danhSachHoaDon.erase(danhSachHoaDon.begin());
+
+    ofstream output(tenFile, ios::trunc);
+    if (!output)
+        return false;
+
+    for (size_t i = 0; i < danhSachHoaDon.size(); ++i)
+    {
+        output << danhSachHoaDon[i];
+        if (i + 1 < danhSachHoaDon.size())
+            output << "\n";
+    }
+
+    return true;
+}
 // Hien thi menu chinh len man hinh
 void hienThiMenu()
 {
@@ -326,7 +403,8 @@ void hienThiMenu()
         cout << "4. Xoa san pham theo ma\n";
         cout << "5. Sua san pham theo ma\n";
         cout << "6. Lap hoa don ban hang va tinh tong tien\n";
-        cout << "7. Thoat\n";
+        cout << "7. In hoa don moi nhat va xoa hoa don cu nhat\n";
+        cout << "8. Thoat\n";
         cout << "Lua chon: ";
 }
 
@@ -391,6 +469,12 @@ void xuLyLuaChon(int luaChon)
         else if (luaChon == 6)
         {
             lapHoaDonBanHang(TEN_FILE_SANPHAM, TEN_FILE_HOADON);
+        }
+        else if (luaChon == 7)
+        {
+            inHoaDonMoiNhatTuFile(TEN_FILE_HOADON);
+            if (xoaHoaDonCuNhat(TEN_FILE_HOADON))
+                cout << "Da xoa hoa don cu nhat trong file " << TEN_FILE_HOADON << "\n";
         }
         else
         {
