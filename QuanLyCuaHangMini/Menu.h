@@ -452,10 +452,11 @@ void hienThiMenu()
     inDongMenu(4, "Xoa san pham theo ma");
     inDongMenu(5, "Sua san pham theo ma");
     inDongMenu(6, "Lap hoa don ban hang va tinh tong tien");
-    inDongMenu(7, "In hoa don moi nhat va xoa hoa don cu nhat");
-    inDongMenu(8, "Thoat chuong trinh");
+    inDongMenu(7, "In hoa don moi nhat");
+    inDongMenu(8, "Xoa hoa don cu nhat");
+    inDongMenu(9, "Thoat chuong trinh");
     inDuongKeMenu('=');
-    std::cout << "Nhap lua chon [1-8]: ";
+    std::cout << "Nhap lua chon [1-9]: ";
 }
 
 // Xu ly lua chon nguoi dung da chon tu menu
@@ -537,9 +538,20 @@ void xuLyLuaChon(int luaChon)
         case 7:
         {
             inHoaDonMoiNhatTuFile(TEN_FILE_HOADON);
-            if (xoaHoaDonCuNhat(TEN_FILE_HOADON))
-                cout << "Da xoa hoa don cu nhat trong file " << TEN_FILE_HOADON << "\n";
             break;
+        }
+        case 8:
+        {
+            if (xoaHoaDonCuNhat(TEN_FILE_HOADON))
+                cout << "Da xoa hoa don cu nhat tu file " << TEN_FILE_HOADON << "\n";
+            else
+                cout << "Khong co hoa don nao de xoa trong file " << TEN_FILE_HOADON << "\n";
+            break;
+        }
+        case 9:
+        {
+            cout << "Dang thoat chuong trinh...\n";
+            exit(0);
         }
 
         default:
