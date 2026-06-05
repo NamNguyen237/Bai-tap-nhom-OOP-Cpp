@@ -25,7 +25,8 @@ class DoDienTu : public SanPham
 {
     public:
         DoDienTu();
-        ~DoDienTu() override; //override: ghi de len class SanPham,giup compiler kiem tra thong tin
+        //override: ghi de len class SanPham,giup compiler kiem tra thong tin
+        ~DoDienTu() override;
         void Nhap() override;
         void Xuat() const override;
         void LuuFile() const override;

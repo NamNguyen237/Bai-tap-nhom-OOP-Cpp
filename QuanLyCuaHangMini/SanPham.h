@@ -20,27 +20,41 @@ class SanPham
         int soluong;
     public:
         SanPham();
-        virtual ~SanPham();//tranh ro ri bo nho -_-
+        //tranh ro ri bo nho
+        virtual ~SanPham();
+
         //dung de cac class khac (HoaDon,KhachHang) lay du lieu
         string getMaSP() const;
+
         string getTen() const;
         int getGiaBan() const;
         string getNSX() const;
 
-        int getSoLuong() const {return soluong;}//Khach hang mua bao nhieu
-        void CheckSoLuongKho(int SoLuongMua){soluong -= SoLuongMua;}//check soluong trong kho
+        //Khach hang mua bao nhieu
+        int getSoLuong() const {return soluong;}
+
+        //check soluong trong kho
+        void CheckSoLuongKho(int SoLuongMua){soluong -= SoLuongMua;}
 
         void setMaSP(const string &ma);
         void setTen(const string &ten);
         void setNSX(const string &nsx);
-        void setGiaBan(int giaBan);                      // Gán giá bán từ giá trị số nguyên cho mục đích tính toán
-        void setGiaBan(const string &rawGiaBan);         // Dùng khi nhập giá từ chuỗi có thể có dấu "." hoặc ký tự khác
+        // Gán giá bán từ giá trị số nguyên cho mục đích tính toán
+        void setGiaBan(int giaBan);
+
+        // Dùng khi nhập giá từ chuỗi có thể có dấu "." hoặc ký tự khác
+        void setGiaBan(const string &rawGiaBan);
+
         void setSoLuong(int soLuong);
 
         virtual void Nhap();
         virtual void Xuat()const ;
-        string getGiaBanFormatted() const;                // Trả về chuỗi giá có định dạng dấu chấm để in ra màn hình
-        static pair<int,string> ChuanHoaGiaBan(const string &rawGiaBan); // Chuẩn hóa đầu vào giá tiền
+        // Trả về chuỗi giá có định dạng dấu chấm để in ra màn hình
+        string getGiaBanFormatted() const;
+
+        // Chuẩn hóa đầu vào giá tiền
+        static pair<int,string> ChuanHoaGiaBan(const string &rawGiaBan);
+
         virtual void LuuFile() const = 0;
         virtual string getLoai() const = 0;
         static string RutGonNSX(const string &nsx);
@@ -161,7 +175,7 @@ void SanPham :: Nhap()
 
     // Lưu giá đã chuẩn hóa vào biến số để dùng cho tính toán.
     GiaBan = parsedGia.first;
-    
+
     cout << "Nhap so luong trong kho : ";
     cin >> soluong;
 
