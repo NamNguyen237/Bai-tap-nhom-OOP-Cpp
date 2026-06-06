@@ -314,7 +314,7 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
         }
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        if (hoaDon.themSanPham(sanPham, soLuongMua))
+        if (hoaDon + sanPham)
             daCoSanPham = true;
     }
 
