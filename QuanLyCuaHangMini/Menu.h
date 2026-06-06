@@ -280,12 +280,18 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
     bool daCoSanPham = false;
     while (true)
     {
-        cout << "Nhap ma san pham can mua (0 de ket thuc): ";
+        cout << "Nhap ma san pham can mua (2 de xoa san pham gan nhat, 0 de ket thuc): ";
         string maSP;
         getline(cin, maSP);
 
         if (maSP == "0")
             break;
+
+        if (maSP == "2")
+        {
+            hoaDon - nullptr;
+            continue;
+        }
 
         SanPham* sanPham = timSanPhamTheoMa(danhSach, maSP);
         if (!sanPham)

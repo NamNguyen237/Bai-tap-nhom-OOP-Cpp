@@ -33,6 +33,7 @@ class HoaDon
         void inHoaDon(); //const;
         bool themSanPham(SanPham* sp, int soLuongMua);
         HoaDon& operator+(SanPham* sp);//cong don hoa don
+        HoaDon& operator-(SanPham* sp);//xoa sp truoc khi khach hang doi y
         void setTenKH(const string &TenKH);
         int getTongTien() const;
         void LuuFile(const string &tenFile) const;
@@ -95,6 +96,28 @@ HoaDon &HoaDon::operator+(SanPham* sp)
     themSanPham(sp, SoLuongMua);
     return *this;//tro lai hoa don hien tai de tiep tuc mua tiep
 }
+
+HoaDon &HoaDon::operator-(SanPham* sp)
+{
+    if (DanhSachSP.empty())
+    {
+        cout << "Khong co san pham nao de xoa trong hoa don.\n";
+        return *this;
+    }
+
+    ChiTietHoaDon chiTiet = DanhSachSP.back();
+    DanhSachSP.pop_back();
+
+    if (chiTiet.sp)
+    {
+        chiTiet.sp->setSoLuong(chiTiet.sp->getSoLuong() + chiTiet.soLuongMua);
+    }
+
+    cout << "Da xoa san pham gan nhat: " << chiTiet.maSP
+         << " x" << chiTiet.soLuongMua << "\n";
+    return *this;
+}
+
 int HoaDon::TongTien()
 {
     return getTongTien();
