@@ -8,7 +8,7 @@
 
 #### Danh sách thành viên:
 
-- Nguyễn Hồng Nam
-- Nguyễn Minh Đức
+- Nguyễn Hồng Nam [GitHub @NamNguyen237](https://github.com/NamNguyen237/)
+- Nguyễn Minh Đức [GitHub @remchan725-code](https://github.com/remchan725-code)
 - Nguyễn Văn Huy
 
