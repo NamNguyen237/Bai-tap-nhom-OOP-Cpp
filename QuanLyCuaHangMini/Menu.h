@@ -302,17 +302,6 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
 
         cout << "Thong tin san pham:\n";
         sanPham->Xuat();
-        cout << "\nNhap so luong mua: ";
-
-        int soLuongMua = 0;
-        if (!(cin >> soLuongMua))
-        {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "So luong mua khong hop le.\n";
-            continue;
-        }
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (hoaDon + sanPham)
             daCoSanPham = true;

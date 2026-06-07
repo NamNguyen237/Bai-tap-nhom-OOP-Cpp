@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <limits>
 
 using namespace std;
 struct ChiTietHoaDon
@@ -32,7 +33,7 @@ class HoaDon
         int TongTien();
         void inHoaDon(); //const;
         bool themSanPham(SanPham* sp, int soLuongMua);
-        HoaDon& operator+(SanPham* sp);//cong don hoa don
+        bool operator+(SanPham* sp);//cong don hoa don
         HoaDon& operator-();//xoa sp truoc khi khach hang doi y
         void setTenKH(const string &TenKH);
         int getTongTien() const;
@@ -83,18 +84,26 @@ HoaDon::~HoaDon()
 {
     DanhSachSP.clear();//xoa danh sach
 }
-HoaDon &HoaDon::operator+(SanPham* sp)
+bool HoaDon::operator+(SanPham* sp)
 {
     if (sp == nullptr)
     {
         cout << "San pham khong hop le.\n";
-        return *this;
+        return false;
     }
+
     int SoLuongMua = 0;
     cout << "Nhap so luong mua: ";
-    cin >> SoLuongMua;
-    themSanPham(sp, SoLuongMua);
-    return *this;//tro lai hoa don hien tai de tiep tuc mua tiep
+    if (!(cin >> SoLuongMua))
+    {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "So luong mua khong hop le.\n";
+        return false;
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    return themSanPham(sp, SoLuongMua);
 }
 
 HoaDon &HoaDon::operator-()
