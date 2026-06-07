@@ -1,3 +1,4 @@
 DDT|SM01|May Giat Samsung|Samsung|10000000|10000
 DGD|SN01|Chao|Sunhouse|110000|10000
 DDT|XM01|Dien thoai Redmi Note 15 5G|Xiaomi|7000000|60000
+DDT|TS01|Smart Tivi 40inch Toshiba|Toshiba|15000000|2000

@@ -179,6 +179,8 @@ void SanPham :: Nhap()
     cout << "Nhap so luong trong kho : ";
     cin >> soluong;
 
+    //Thuat toan tao ma san pham: lay 2 ky tu dau tien cua NSX (sau khi bo qua nguyen am)
+    // + so thu tu cua mat hang do trong kho
     string prefix = RutGonNSX(NSX);
     DemMatHang[prefix]++;//dem sp cua tung hang vi du "[SN] = 1"
     int stt = DemMatHang[prefix];//so thu tu = so sp SN01,SN02,...
