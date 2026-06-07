@@ -33,7 +33,7 @@ class HoaDon
         void inHoaDon(); //const;
         bool themSanPham(SanPham* sp, int soLuongMua);
         HoaDon& operator+(SanPham* sp);//cong don hoa don
-        HoaDon& operator-(SanPham* sp);//xoa sp truoc khi khach hang doi y
+        HoaDon& operator-();//xoa sp truoc khi khach hang doi y
         void setTenKH(const string &TenKH);
         int getTongTien() const;
         void LuuFile(const string &tenFile) const;
@@ -97,7 +97,7 @@ HoaDon &HoaDon::operator+(SanPham* sp)
     return *this;//tro lai hoa don hien tai de tiep tuc mua tiep
 }
 
-HoaDon &HoaDon::operator-(SanPham* sp)
+HoaDon &HoaDon::operator-()
 {
     if (DanhSachSP.empty())
     {

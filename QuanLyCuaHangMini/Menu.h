@@ -289,7 +289,7 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
 
         if (maSP == "2")
         {
-            hoaDon - nullptr;
+            -hoaDon;
             continue;
         }
 
