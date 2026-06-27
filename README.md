@@ -8,7 +8,7 @@
 
 - Nguyễn Hồng Nam [GitHub @NamNguyen237](https://github.com/NamNguyen237/)
 - Nguyễn Minh Đức [GitHub @remchan725-code](https://github.com/remchan725-code)
-- Nguyễn Văn Huy
+- Nguyễn Văn Huy [GitHub @nguyenvanhuy23072007-cmyk](https://github.com/nguyenvanhuy23072007-cmyk)
 
 #### Giới thiệu:
 
