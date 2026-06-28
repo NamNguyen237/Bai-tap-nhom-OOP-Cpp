@@ -31,36 +31,46 @@ class HoaDon
         HoaDon();
         ~HoaDon();
         int TongTien();
-        void inHoaDon(); //const;
+        void inHoaDon();
         bool themSanPham(SanPham* sp, int soLuongMua);
         bool operator+(SanPham* sp);//cong don hoa don
-        HoaDon& operator-();//xoa sp truoc khi khach hang doi y
+        HoaDon& operator-();//xoa sp khi khach hang doi y
         void setTenKH(const string &TenKH);
         int getTongTien() const;
         void LuuFile(const string &tenFile) const;
 };
-void HoaDon :: setTenKH(const string &TenKH)
-{                                                                       
+void HoaDon :: setTenKH(const string &TenKH)//ghi ten khach hang
+{
     this->TenKH = TenKH;
 }
-bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
+
+HoaDon::HoaDon()// ham khoi tao
 {
-    if (sp == nullptr)
+    MaHD = "Ma HD " + to_string(rand()%9000+1000);//random so ma HD
+    TenKH = "";
+}
+HoaDon::~HoaDon()//ham huy
+{
+    DanhSachSP.clear();//xoa danh sach
+}
+bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)//them hang vao hoa don theo so luong tuy y
+{
+    if (sp == nullptr)//kiem tra san pham co hop le khong
         return false;
 
-    if (soLuongMua <= 0)
+    if (soLuongMua <= 0)//kiem tra neu so luong mua <= 0
     {
         cout << "So luong mua khong hop le.\n";
         return false;
     }
 
-    if (soLuongMua > sp->getSoLuong())
+    if (soLuongMua > sp->getSoLuong())//kiem tra neu so luong mua vuot qua so luong trong kho
     {
         cout << "Trong kho khong du! Con lai "<<sp->getSoLuong()<<" san pham\n";
         return false;// khong them vao hoa don
     }
 
-    sp->CheckSoLuongKho(soLuongMua);
+    sp->CheckSoLuongKho(soLuongMua);//giam so luong kho sau khi mua thanh cong
 
     ChiTietHoaDon chiTiet;
     chiTiet.sp = sp;
@@ -75,17 +85,7 @@ bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)
     cout << "Da them ["<<sp->getMaSP()<<"] x"<<soLuongMua<<" vao hoa don "<<MaHD<<endl;
     return true;
 }
-HoaDon::HoaDon()
-{
-    MaHD = "Ma HD " + to_string(rand()%9000+1000);//random so ma HD
-    TenKH = "";
-}
-HoaDon::~HoaDon()
-{
-    DanhSachSP.clear();//xoa danh sach
-}
-bool HoaDon::operator+(SanPham* sp)
-{
+bool HoaDon::operator+(SanPham* sp){//them san pham theo yeu cau so luong cua nguoi mua
     if (sp == nullptr)
     {
         cout << "San pham khong hop le.\n";
@@ -97,7 +97,7 @@ bool HoaDon::operator+(SanPham* sp)
     if (!(cin >> SoLuongMua))
     {
         cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');//huy ki tu thua sau khi nhap so luong mua
         cout << "So luong mua khong hop le.\n";
         return false;
     }
@@ -106,7 +106,7 @@ bool HoaDon::operator+(SanPham* sp)
     return themSanPham(sp, SoLuongMua);
 }
 
-HoaDon &HoaDon::operator-()
+HoaDon &HoaDon::operator-()//xoa san pham moi nhat ban vua mua
 {
     if (DanhSachSP.empty())
     {
@@ -131,10 +131,10 @@ int HoaDon::TongTien()
 {
     return getTongTien();
 }
-int HoaDon::getTongTien() const
+int HoaDon::getTongTien() const // tinh hoac cap nhat tong tien hoa don
 {
     int tongTien = 0;
-    for (const auto& chiTiet : DanhSachSP)
+    for (const auto& chiTiet : DanhSachSP)//duyet tung dong hoa don
         tongTien += chiTiet.giaBan * chiTiet.soLuongMua;//lay gia ban cua tung loai san pham
 
     return tongTien;
