@@ -71,7 +71,7 @@ bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)//them hang vao hoa don the
     }
 
     sp->CheckSoLuongKho(soLuongMua);//giam so luong kho sau khi mua thanh cong
-
+    //tao chi tiet hoa don
     ChiTietHoaDon chiTiet;
     chiTiet.sp = sp;
     chiTiet.SoLuongMua = soLuongMua;
@@ -85,7 +85,7 @@ bool HoaDon::themSanPham(SanPham* sp, int soLuongMua)//them hang vao hoa don the
     cout << "Da them ["<<sp->getMaSP()<<"] x"<<soLuongMua<<" vao hoa don "<<MaHD<<endl;
     return true;
 }
-bool HoaDon::operator+(SanPham* sp){//them san pham theo yeu cau so luong cua nguoi mua
+bool HoaDon::operator+(SanPham* sp){//them san pham theo so luong yeu cau cua nguoi mua
     if (sp == nullptr)
     {
         cout << "San pham khong hop le.\n";
@@ -93,7 +93,7 @@ bool HoaDon::operator+(SanPham* sp){//them san pham theo yeu cau so luong cua ng
     }
 
     int SoLuongMua = 0;
-    cout << "Nhap so luong mua: ";
+    cout << "\nNhap so luong mua: ";
     if (!(cin >> SoLuongMua))
     {
         cin.clear();
@@ -101,9 +101,9 @@ bool HoaDon::operator+(SanPham* sp){//them san pham theo yeu cau so luong cua ng
         cout << "So luong mua khong hop le.\n";
         return false;
     }
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');//huy ki tu thua dang sau so luong mua VD (123abc), chi lay 123 
 
-    return themSanPham(sp, SoLuongMua);
+    return themSanPham(sp, SoLuongMua);//goi ham them san pham vao hoa don 
 }
 
 HoaDon &HoaDon::operator-()//xoa san pham moi nhat ban vua mua
@@ -114,8 +114,8 @@ HoaDon &HoaDon::operator-()//xoa san pham moi nhat ban vua mua
         return *this;
     }
 
-    ChiTietHoaDon chiTiet = DanhSachSP.back();
-    DanhSachSP.pop_back();
+    ChiTietHoaDon chiTiet = DanhSachSP.back();//lay thong tin san pham cuoi cung vua them vao hoa don
+    DanhSachSP.pop_back();// xoa san pham cuoi cung khoi hoa don
 
     if (chiTiet.sp)
     {
@@ -168,7 +168,7 @@ void HoaDon::inHoaDon()
 void HoaDon :: LuuFile(const string &TenFile)const
 {
     ofstream outFile(TenFile,ios::app);//open file to continue write chu khong xoa di noi dung cu
-    if (!outFile)
+    if (!outFile)//neu khong mo duoc file thi bao loi
     {
         cerr << "Loi!Khong the mo file "<<TenFile<<"!"<<endl;
         return;
@@ -177,9 +177,9 @@ void HoaDon :: LuuFile(const string &TenFile)const
     outFile << " HOA DON BAN HANG: " << MaHD << "\n";
     outFile << "--------------------------------------------------------\n";
     long long tongHoaDon = 0;
-    for (size_t i = 0; i < DanhSachSP.size(); i++)
+    for (size_t i = 0; i < DanhSachSP.size(); i++)//chay vong lap den cuoi danh sach de xu ly tung sp
     {
-       const ChiTietHoaDon &sp = DanhSachSP[i];
+       const ChiTietHoaDon &sp = DanhSachSP[i];//lay tung sp ra tu danh sach
        int thanhTien = sp.giaBan * sp.soLuongMua;
        tongHoaDon += thanhTien;
        outFile << " "<<i+1<<". MaSP: "<<sp.maSP

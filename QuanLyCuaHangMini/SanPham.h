@@ -92,34 +92,34 @@ string SanPham::RutGonNSX(const string &nsx)
 
 pair<int,string> SanPham::ChuanHoaGiaBan(const string &rawGiaBan)//chuyen gia tu string -> int + format voi dau "."
 {
-    string digits;
-    for (char c : rawGiaBan)
+    string digits;//khai bao chuoi de luu chu so
+    for (char c : rawGiaBan)//duyet tung ky tu trong chuoi gia ban
     {
-        if (isdigit((unsigned char)c))
+        if (isdigit((unsigned char)c))//gap chu so thi them vao chuoi digits
             digits.push_back(c);
     }
 
-    if (digits.empty())
+    if (digits.empty())//rong thi tra ve gia 0 va chuoi "0"
         return {0, "0"};
 
     long long value = 0;
-    for (char c : digits)
+    for (char c : digits)//duyet tung ky tu trong digits de chuyen sang so nguyen 
     {
-        value = value * 10 + (c - '0');
-        if (value > INT_MAX)
+        value = value * 10 + (c - '0');//chuyen ky tu sang so nguyen
+        if (value > INT_MAX)//vuot qua gia tri int thi break
             break;
     }
     if (value > INT_MAX)
         value = INT_MAX;
 
-    int gia = static_cast<int>(value);
-    string formatted;
-    string giaDaChuanHoa = to_string(gia);
+    int gia = static_cast<int>(value);//chuyen tu long long sang int de tra ve gia tri
+    string formatted;//tao chuoi de luu gia da duoc dinh dang voi dau "."
+    string giaDaChuanHoa = to_string(gia);//chuyen gia ban sang chuoi de xu ly
     int count = 0;
-    for (int i = (int)giaDaChuanHoa.size() - 1; i >= 0; --i)
+    for (int i = (int)giaDaChuanHoa.size() - 1; i >= 0; --i)//duyet tu cuoi chuoi len dau
     {
-        formatted.insert(formatted.begin(), giaDaChuanHoa[i]);
-        if (++count == 3 && i > 0)
+        formatted.insert(formatted.begin(), giaDaChuanHoa[i]);//them tung ky tu vao dau chuoi
+        if (++count == 3 && i > 0)//neu da cho 3 ky tu vao va chua den cuoi chuoi => them dau "." va reset count 
         {
             formatted.insert(formatted.begin(), '.');
             count = 0;
@@ -148,11 +148,11 @@ void SanPham :: Nhap()
     cout << "Nhap nha san xuat: ";
     cin >> NSX;
 
-    cout << "Nhap gia ban: ";
+    cout << "Nhap gia ban: ";//gia ban tho
     string giaBanRaw;
     cin >> giaBanRaw;
 
-    pair<int,string> parsedGia = ChuanHoaGiaBan(giaBanRaw);
+    pair<int,string> parsedGia = ChuanHoaGiaBan(giaBanRaw); 
     while (parsedGia.first <= 0)
     {
         cout << "Gia ban khong hop le! Xin vui long nhap lai: ";
@@ -169,7 +169,7 @@ void SanPham :: Nhap()
     DemMatHang[prefix]++; //dem sp cua tung hang vi du "[SN] = 1"
     int stt = DemMatHang[prefix]; //so thu tu = so sp SN01,SN02,...
     string chuoiSTT = (stt < 10)?"0" + to_string(stt):to_string(stt); //them so "0" vao dang sau neu stt < 10
-    maSP = prefix + chuoiSTT;
+    maSP = prefix + chuoiSTT;//ma san pham = 2 chu cai cua NSX + so thu tu 
     cout << "San pham co ma: "<<maSP << endl;
 }
 void SanPham::Xuat()const
