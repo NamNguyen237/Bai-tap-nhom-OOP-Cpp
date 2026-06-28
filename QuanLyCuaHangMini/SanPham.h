@@ -76,11 +76,11 @@ string SanPham::RutGonNSX(const string &nsx)
     if (nsx.length() <= 2)//neu ten NSX chi co 2 chu hoac it hon, tra ve y nguyen
         return nsx;
 
-    static const string NguyenAm = "aeiouAEIOU";//neu gap cac nguyen am
-    string result;//bo qua nguyen am
+    static const string NguyenAm = "aeiouAEIOU";//bien loc cac nguyen am
+    string result;//ket qua cuoi cung
     for (char c : nsx)//duyet tung chu tren dong san xuat
     {
-        unsigned char kyTu = static_cast<unsigned char>(c);
+        unsigned char kyTu = static_cast<unsigned char>(c);//chuyen ky tu sang unsigned char de tranh loi doi voi cac ky tu dac biet 
         if (isalpha(kyTu) && NguyenAm.find(c) == string::npos)//ktra xem co phai chu cai, va cac chu do co cac nguyen am khong
             result += static_cast<char>(toupper(kyTu));// them vao ket qua
 
