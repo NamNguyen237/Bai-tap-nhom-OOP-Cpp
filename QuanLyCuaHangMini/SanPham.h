@@ -177,7 +177,7 @@ void SanPham::Xuat()const
     cout << "Ma san pham : "<<maSP
          <<"\nTen mat hang: " <<ten
          <<"\nNSX: "<<NSX
-         <<"\nGia: "<<getGiaBanFormatted();
+         <<"\nGia: "<<getGiaBanFormatted()
          <<"\nSo luong con lai trong kho: "<<soluong;
 }
 #endif

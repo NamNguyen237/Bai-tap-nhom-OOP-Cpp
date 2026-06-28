@@ -1,4 +1,6 @@
-DDT|SM01|May Giat Samsung|Samsung|10000000|10000
+DDT|SM01|May Giat Samsung|Samsung|10000000|9999
 DGD|SN01|Chao|Sunhouse|110000|10000
-DDT|XM01|Dien thoai Redmi Note 15 5G|Xiaomi|7000000|60000
+DDT|XM01|Dien thoai Redmi Note 15 5G|Xiaomi|7000000|59999
 DDT|TS01|Smart Tivi 40inch Toshiba|Toshiba|15000000|2000
+DDT|LN01|Laptop Workstation Lenovo Thinkpad P16 G2|Lenovo|80000000|1000
+DDT|NK02|Nokia 3310|Nokia|800000|1000
