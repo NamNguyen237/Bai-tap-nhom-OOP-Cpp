@@ -305,6 +305,8 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
             break;
 
         // Gọi overload unary operator '-' để rollback/xóa SP gần nhất nếu add nhầm (đồng thời cộng bù lại kho).
+        // cho mấy ông không biết, unary operator là toán tử đơn ngôi, khác với toán tử bình thường là nhị ngôi 
+        // (ví dụ: a+b là nhị ngôi, -a là đơn ngôi)
         if (maSP == "2")
         {
             -hoaDon;
@@ -321,7 +323,7 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
         cout << "Thong tin san pham:\n";
         sanPham->Xuat();
 
-        if (hoaDon + sanPham)
+        if (hoaDon + sanPham) //nhị ngôi thêm sản phẩm nhưng return dạng boolean để check hóa đơn đã có sản phẩm này hay chưa
             daCoSanPham = true;
     }
 
@@ -407,7 +409,7 @@ bool xoaHoaDonCuNhat(const string& tenFile)
     if (danhSachHoaDon.empty())
         return false;
 
-    danhSachHoaDon.erase(danhSachHoaDon.begin());
+    danhSachHoaDon.erase(danhSachHoaDon.begin()); //chặt đầu vector xóa đi hóa đơn đầu tiên (cũ nhất)
 
     ofstream output(tenFile, ios::trunc);
     if (!output)
