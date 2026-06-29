@@ -1,5 +1,5 @@
-// Controller chính: Kết nối UI Console với các Entity (SanPham, HoaDon).
-// Chứa toàn bộ logic xử lý menu và thao tác I/O với file txt.
+// Controller chinh: Ket noi UI Console voi cac Entity (SanPham, HoaDon).
+// Chua toan bo logic xu ly menu va thao tac I/O voi file txt.
 #ifndef MENU_H
 #define MENU_H
 
@@ -22,8 +22,8 @@ using namespace std;
 static const string TEN_FILE_SANPHAM = "sanpham.txt";
 static const string TEN_FILE_HOADON = "hoadon.txt";
 
-// Phải loop qua để delete từng phần tử do dùng con trỏ (cấp phát động).
-// Không giải phóng chỗ này là bị memory leak ngay. Xong xuôi thì clear() vector.
+// Phai loop qua de delete tung phan tu do dung con tro (cap phat dong).
+// Khong giai phong cho nay la bi memory leak ngay. Xong xuoi thi clear() vector.
 void giaiPhongDanhSachSanPham(vector<SanPham*>& danhSach)
 {
     for (SanPham* sanPham : danhSach)
@@ -32,8 +32,8 @@ void giaiPhongDanhSachSanPham(vector<SanPham*>& danhSach)
     danhSach.clear();
 }
 
-// Factory method pattern đơn giản: parse dòng txt và dựa vào flag "DDT"/"DGD" 
-// để init đúng class con (DoDienTu/DoGiaDung).
+// Factory method pattern don gian: parse dong txt va dua vao flag "DDT"/"DGD" 
+// de init dung class con (DoDienTu/DoGiaDung).
 SanPham* taoSanPhamTuDong(const string& loai,const string& maSP,const string& ten,const string& nsx,int giaBan,int soLuong)
 {
     SanPham* sanPham = nullptr;
@@ -51,8 +51,8 @@ SanPham* taoSanPhamTuDong(const string& loai,const string& maSP,const string& te
     sanPham->setGiaBan(giaBan);
     sanPham->setSoLuong(soLuong);
 
-    // Tách chuỗi để lấy phần số (ví dụ: DDT12 -> lấy số 12).
-    // Sync lại ID lớn nhất vào biến static DemMatHang để auto-increment lúc tạo mới không bị lặp mã.
+    // Tach chuoi de lay phan so (vi du: DDT12 -> lay so 12).
+    // Sync lai ID lon nhat vao bien static DemMatHang de auto-increment luc tao moi khong bi lap ma.
     size_t viTri = maSP.size();
     while (viTri > 0 && isdigit(static_cast<unsigned char>(maSP[viTri - 1])))
         --viTri;
@@ -67,8 +67,8 @@ SanPham* taoSanPhamTuDong(const string& loai,const string& maSP,const string& te
     return sanPham;
 }
 
-// Load toàn bộ DB từ txt lên memory (vector).
-// CRUD trên memory trước rồi mới flush (ghi đè) lại xuống file để tối ưu I/O.
+// Load toan bo DB tu txt len memory (vector).
+// CRUD tren memory truoc roi moi flush (ghi de) lai xuong file de toi uu I/O.
 vector<SanPham*> docTatCaSanPham(const string& tenFile)
 {
     vector<SanPham*> danhSach;
@@ -77,7 +77,7 @@ vector<SanPham*> docTatCaSanPham(const string& tenFile)
         return danhSach; // file khong ton tai hoac khong mo duoc
 
     string dong;
-    // Đọc từng dòng, bỏ qua dòng trống hoặc dòng bị dính carriage return (\r) do khác biệt Win/Linux
+    // Doc tung dong, bo qua dong trong hoac dong bi dinh carriage return (\r) do khac biet Win/Linux
     while (getline(input, dong))
     {
         if (dong.empty())
@@ -86,7 +86,7 @@ vector<SanPham*> docTatCaSanPham(const string& tenFile)
         if (!dong.empty() && dong.back() == '\r')
             dong.pop_back();
 
-        // Split chuỗi bằng dấu '|'
+        // Split chuoi bang dau '|'
         stringstream phanTach(dong);
         string loai, maSP, ten, nsx, giaBanStr, soLuongStr;
 
@@ -109,7 +109,7 @@ vector<SanPham*> docTatCaSanPham(const string& tenFile)
         }
         catch (...)
         {
-            // Catch-all block: Nếu data sai format làm lỗi parse số (stoi) thì skip dòng này, chặn crash app
+            // Catch-all block: Neu data sai format lam loi parse so (stoi) thi skip dong nay, chan crash app
             continue;
         }
 
@@ -120,7 +120,7 @@ vector<SanPham*> docTatCaSanPham(const string& tenFile)
 
     return danhSach;
 }
-// Dùng linear search duyệt vector tìm mã. Trả về pointer, cẩn thận check nullptr khi xài.
+// Dung linear search duyet vector tim ma. Tra ve pointer, can than check nullptr khi xai.
 SanPham* timSanPhamTheoMa(vector<SanPham*>& danhSach, const string& maSP)
 {
     for (SanPham* sanPham : danhSach)
@@ -133,8 +133,8 @@ SanPham* timSanPhamTheoMa(vector<SanPham*>& danhSach, const string& maSP)
 }
 void inSanPhamTheoMa(const string& tenFile, const string& maSP)
 {
-    // Note: Do load full list lên object list tạm, 
-    // phải đảm bảo mọi return path đều đã gọi giải phóng RAM.
+    // Note: Do load full list len object list tam, 
+    // phai dam bao moi return path deu da goi giai phong RAM.
     vector<SanPham*> danhSach = docTatCaSanPham(tenFile);
     SanPham* sanPham = timSanPhamTheoMa(danhSach, maSP);
 
@@ -150,7 +150,7 @@ void inSanPhamTheoMa(const string& tenFile, const string& maSP)
     cout << "\n";
     giaiPhongDanhSachSanPham(danhSach);
 }
-// Flush vector xuống file. Dùng mode ios::trunc để overwrite trắng file cũ.
+// Flush vector xuong file. Dung mode ios::trunc de overwrite trang file cu.
 bool luuDanhSachSanPham(const vector<SanPham*>& danhSach, const string& tenFile)
 {
     ofstream output(tenFile, ios::trunc);
@@ -170,8 +170,8 @@ bool luuDanhSachSanPham(const vector<SanPham*>& danhSach, const string& tenFile)
     return true;
 }
 
-// Note: Chỗ này nhờ Polymorphism (đa hình) + hàm virtual Xuat() ở class base
-// nên lúc runtime gọi danhSach[i]->Xuat() nó sẽ tự trigger đúng override method của class con.
+// Note: Cho nay nho Polymorphism (da hinh) + ham virtual Xuat() o class base
+// nen luc runtime goi danhSach[i]->Xuat() no se tu trigger dung override method cua class con.
 void inTatCaSanPhamTuFile(const string& tenFile)
 {
     vector<SanPham*> danhSach = docTatCaSanPham(tenFile);
@@ -192,8 +192,8 @@ void inTatCaSanPhamTuFile(const string& tenFile)
     giaiPhongDanhSachSanPham(danhSach);
 }
 
-// Phải dùng Iterator để truyền vào hàm erase. 
-// Nhớ delete object giải phóng RAM trước khi erase khỏi vector.
+// Phai dung Iterator de truyen vao ham erase. 
+// Nho delete object giai phong RAM truoc khi erase khoi vector.
 bool xoaSanPham(const string& tenFile, const string& maSP)
 {
     vector<SanPham*> danhSach = docTatCaSanPham(tenFile);
@@ -221,7 +221,7 @@ bool xoaSanPham(const string& tenFile, const string& maSP)
     return ketQua;
 }
 
-// Update field. Có trick là check if (!duLieu.empty()) để nếu user enter bỏ qua thì giữ nguyên data cũ, đỡ phải gõ lại.
+// Update field. Co trick la check if (!duLieu.empty()) de neu user enter bo qua thi giu nguyen data cu, do phai go lai.
 bool suaSanPham(const string& tenFile, const string& maSP)
 {
     vector<SanPham*> danhSach = docTatCaSanPham(tenFile);
@@ -277,8 +277,8 @@ bool suaSanPham(const string& tenFile, const string& maSP)
     giaiPhongDanhSachSanPham(danhSach);
     return ketQua;
 }
-// Lập hóa đơn. Số lượng tồn kho sẽ auto giảm đi 1 ngay bên trong logic overload operator '+' (hoaDon + sanPham).
-// Xử lý xong trên memory chỉ việc call luuDanhSachSanPham để đồng bộ file.
+// Lap hoa don. So luong ton kho se auto giam di 1 ngay ben trong logic overload operator '+' (hoaDon + sanPham).
+// Xu ly xong tren memory chi viec call luuDanhSachSanPham de dong bo file.
 void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
 {
     vector<SanPham*> danhSach = docTatCaSanPham(tenFileSanPham);
@@ -304,9 +304,9 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
         if (maSP == "0")
             break;
 
-        // Gọi overload unary operator '-' để rollback/xóa SP gần nhất nếu add nhầm (đồng thời cộng bù lại kho).
-        // cho mấy ông không biết, unary operator là toán tử đơn ngôi, khác với toán tử bình thường là nhị ngôi 
-        // (ví dụ: a+b là nhị ngôi, -a là đơn ngôi)
+        // Goi overload unary operator '-' de rollback/xoa SP gan nhat neu add nham (dong thoi cong bu lai kho).
+        // cho may ong khong biet, unary operator la toan tu don ngoi, khac voi toan tu binh thuong la nhi ngoi 
+        // (vi du: a+b la nhi ngoi, -a la don ngoi)
         if (maSP == "2")
         {
             -hoaDon;
@@ -323,7 +323,7 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
         cout << "Thong tin san pham:\n";
         sanPham->Xuat();
 
-        if (hoaDon + sanPham) //nhị ngôi thêm sản phẩm nhưng return dạng boolean để check hóa đơn đã có sản phẩm này hay chưa
+        if (hoaDon + sanPham) //nhi ngoi them san pham nhung return dang boolean de check hoa don da co san pham nay hay chua
             daCoSanPham = true;
     }
 
@@ -345,7 +345,7 @@ void lapHoaDonBanHang(const string& tenFileSanPham, const string& tenFileHoaDon)
 
     giaiPhongDanhSachSanPham(danhSach);
 }
-// Parser hóa đơn. Do txt format mỗi khối nhiều dòng, nên parse dựa vào flag string đường kẻ "=====" để ngắt khối.
+// Parser hoa don. Do txt format moi khoi nhieu dong, nen parse dua vao flag string duong ke "=====" de ngat khoi.
 vector<string> docTatCaHoaDon(const string& tenFile)
 {
     vector<string> danhSachHoaDon;
@@ -402,14 +402,14 @@ void inHoaDonMoiNhatTuFile(const string& tenFile)
     cout << "=== HOA DON MOI NHAT ===\n";
     cout << danhSachHoaDon.back();
 }
-// Hóa đơn cũ nhất luôn ở index 0, chặt đầu vector (erase begin) rồi lưu lại.
+// Hoa don cu nhat luon o index 0, chat dau vector (erase begin) roi luu lai.
 bool xoaHoaDonCuNhat(const string& tenFile)
 {
     vector<string> danhSachHoaDon = docTatCaHoaDon(tenFile);
     if (danhSachHoaDon.empty())
         return false;
 
-    danhSachHoaDon.erase(danhSachHoaDon.begin()); //chặt đầu vector xóa đi hóa đơn đầu tiên (cũ nhất)
+    danhSachHoaDon.erase(danhSachHoaDon.begin()); //chat dau vector xoa di hoa don dau tien (cu nhat)
 
     ofstream output(tenFile, ios::trunc);
     if (!output)
@@ -427,7 +427,7 @@ bool xoaHoaDonCuNhat(const string& tenFile)
 
 const int DO_RONG_MENU = 62;
 
-// UI Helper: Căn giữa text tự động tính toán padding khoảng trắng 2 bên
+// UI Helper: Can giua text tu dong tinh toan padding khoang trang 2 ben
 string canGiua(const string& noiDung, int doRong)
 {
     if ((int)noiDung.size() >= doRong)
@@ -477,8 +477,8 @@ void hienThiMenu()
     std::cout << "Nhap lua chon [1-9]: ";
 }
 
-// Main event loop switch-case xử lý menu
-// Note: upcasting con trỏ SanPham* = new DoDienTu() để dùng chung interface.
+// Main event loop switch-case xu ly menu
+// Note: upcasting con tro SanPham* = new DoDienTu() de dung chung interface.
 void xuLyLuaChon(int luaChon)
 {
     switch (luaChon)
@@ -489,7 +489,7 @@ void xuLyLuaChon(int luaChon)
             cout << "Lua chon: ";
             int luaChonLoai = 0;
             cin >> luaChonLoai;
-            // Clear buffer: Xóa sạch ký tự '\n' còn sót lại trong stdin để không bị trôi lệnh getline() ở dưới
+            // Clear buffer: Xoa sach ky tu '\n' con sot lai trong stdin de khong bi troi lenh getline() o duoi
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
     
             SanPham* sanPham = nullptr;
@@ -503,8 +503,8 @@ void xuLyLuaChon(int luaChon)
                 return;
             }
     
-            // Nhờ hàm Nhap() là virtual function nên trình biên dịch sẽ gọi đúng override method của class con.
-            sanPham->Nhap(); // (Ông Đức bớt sửa nhầm thành Xuat() đi nha)
+            // Nho ham Nhap() la virtual function nen trinh bien dich se goi dung override method cua class con.
+            sanPham->Nhap(); // (Ong Duc bot sua nham thanh Xuat() di nha)
             sanPham->LuuFile();
             delete sanPham;
             cout << "Da luu san pham vao file " << TEN_FILE_SANPHAM << "\n";
